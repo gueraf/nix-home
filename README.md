@@ -6,3 +6,10 @@ nix-channel --add https://github.com/nix-community/home-manager/archive/master.t
 nix-channel --update
 nix-shell '<home-manager>' -A install
 ```
+
+```sh
+cs ~
+gh repo clone gueraf/nix-home
+cd ~/.config
+ln -s ~/nix-home nixpkgs
+```

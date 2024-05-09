@@ -1,0 +1,4 @@
+export PATH=/home/fabian/bin:$PATH
+
+. ~/.bash_tmux
+

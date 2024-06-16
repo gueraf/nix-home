@@ -18,6 +18,7 @@
     pkgs.sublime
     pkgs.git
     pkgs.htop
+    pkgs.gh
 
     pkgs.vscode
     pkgs.vscode-extensions.ms-python.python

@@ -15,7 +15,7 @@
     pkgs.tmux
     pkgs.vim
     pkgs.gedit
-    pkgs.sublime
+    pkgs.sublime4
     pkgs.git
     pkgs.htop
     pkgs.gh

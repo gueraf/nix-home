@@ -15,7 +15,7 @@
     pkgs.tmux
     pkgs.vim
     pkgs.gedit
-    pkgs.sublime4
+    pkgs.sublime
     pkgs.git
     pkgs.htop
     pkgs.gh
@@ -33,6 +33,7 @@
     pkgs.kubernetes
     pkgs.kubernetes-helm
     pkgs.openfortivpn
+    pkgs.ookla-speedtest
   ];
 
   home.file = {

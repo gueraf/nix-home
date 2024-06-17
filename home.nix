@@ -36,6 +36,8 @@
     pkgs.bazel-watcher
     pkgs.bazel-buildtools
 
+    pkgs.wl-clipboard
+
     pkgs.kubernetes
     pkgs.kubernetes-helm
     # pkgs.openfortivpn

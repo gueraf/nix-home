@@ -1,5 +1,7 @@
 export PATH=/home/fabian/bin:$PATH
 
+. /home/fabian/.nix-profile/etc/profile.d/nix.sh
+
 # https://askubuntu.com/questions/67283/is-it-possible-to-make-writing-to-bash-history-immediate
 shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"

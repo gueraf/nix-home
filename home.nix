@@ -10,8 +10,6 @@
   home.stateVersion = "23.11";
 
   home.packages = [
-    pkgs.home-manager
-
     pkgs.tmux
     pkgs.vim
     pkgs.gedit

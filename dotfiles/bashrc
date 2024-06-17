@@ -8,3 +8,5 @@ PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 . ~/.bash_tmux
 
+alias sudop="sudo --preserve-env=PATH"
+

@@ -26,11 +26,11 @@
     pkgs.htop
     pkgs.gh
 
-    pkgs.vscode
-    pkgs.vscode-extensions.ms-python.python
-    pkgs.vscode-extensions.bazelbuild.vscode-bazel
-    pkgs.vscode-extensions.ms-toolsai.jupyter
-    pkgs.vscode-extensions.ms-kubernetes-tools.vscode-kubernetes-tools
+    # pkgs.vscode
+    # pkgs.vscode-extensions.ms-python.python
+    # pkgs.vscode-extensions.bazelbuild.vscode-bazel
+    # pkgs.vscode-extensions.ms-toolsai.jupyter
+    # pkgs.vscode-extensions.ms-kubernetes-tools.vscode-kubernetes-tools
 
     pkgs.bazel
     pkgs.bazel-watcher
@@ -38,8 +38,10 @@
 
     pkgs.kubernetes
     pkgs.kubernetes-helm
-    pkgs.openfortivpn
+    # pkgs.openfortivpn
     pkgs.ookla-speedtest
+
+    # pkgs.slack
   ];
 
   home.file = {

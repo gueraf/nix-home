@@ -2,12 +2,20 @@
 
 {
   nixpkgs.config.allowUnfree = true;
-
+  targets.genericLinux.enable = true;
   home.username = "fabian";
   home.homeDirectory = "/home/fabian";
 
   # Do not change!
   home.stateVersion = "23.11";
+
+  home.activation = {
+    linkDesktopApplications = {
+      after = [ "writeBoundary" "createXdgUserDirectories" ];
+      before = [ ];
+      data = "/usr/bin/sudo /usr/bin/chmod -R 777 $HOME/.nix-profile/share/applications && /usr/bin/update-desktop-database $HOME/.nix-profile/share/applications";
+    };
+  };
 
   home.packages = [
     pkgs.tmux

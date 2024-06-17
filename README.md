@@ -19,5 +19,5 @@ home-manager switch -f ~/nix-home/home.nix
 ```
 
 ```sh
-echo "export XDG_DATA_DIRS="/home/skainswo/.nix-profile/share:$XDG_DATA_DIRS" > ~/.profile
+echo "export XDG_DATA_DIRS="/home/fabian/.nix-profile/share:$XDG_DATA_DIRS" > ~/.profile
 ```

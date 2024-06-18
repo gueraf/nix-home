@@ -44,6 +44,8 @@
     pkgs.ookla-speedtest
 
     # pkgs.slack
+
+    pkgs.go
   ];
 
   home.file = {

@@ -40,6 +40,7 @@
 
     pkgs.kubernetes
     pkgs.kubernetes-helm
+    pkgs.krew
     # pkgs.openfortivpn
     pkgs.ookla-speedtest
 

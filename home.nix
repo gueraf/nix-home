@@ -53,6 +53,7 @@
     ".bashrc".source = ./dotfiles/bashrc;
     ".bash_tmux".source = ./dotfiles/bash_tmux;
     ".tmux.conf".source = ./dotfiles/tmux_conf;
+    ".kube/config".source = ./dotfiles/kube_config;
   };
 
   programs.home-manager.enable = true;

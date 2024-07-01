@@ -11,7 +11,7 @@ clusters:
 contexts:
 - context:
     cluster: th_cluster
-    # namespace: user-ns
+    namespace: user-ns
     user: ib-test-user
   name: ib-test-user@th_cluster
 - context:

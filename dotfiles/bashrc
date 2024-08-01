@@ -10,5 +10,4 @@ PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"
-alias raydash="k port-forward $(kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers) 8265:8265"
-
+alias raydash="kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers | xargs -I {} kubectl port-forward {} 8265:8265"

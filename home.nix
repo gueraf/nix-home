@@ -23,6 +23,7 @@
     pkgs.gedit
     pkgs.sublime
     pkgs.git
+    pkgs.git-crecord
     pkgs.htop
     pkgs.gh
 

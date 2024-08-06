@@ -11,3 +11,5 @@ PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"
 alias raydash="kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers | xargs -I {} kubectl port-forward {} 8265:8265"
+alias openwebui="kubectl port-forward deployment/open-webui 8080:8080"
+

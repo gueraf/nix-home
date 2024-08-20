@@ -28,6 +28,8 @@
     pkgs.htop
     pkgs.gh
 
+    pkgs.cloudflared
+
     # pkgs.vscode
     # pkgs.vscode-extensions.ms-python.python
     # pkgs.vscode-extensions.bazelbuild.vscode-bazel

@@ -28,6 +28,8 @@
     pkgs.htop
     pkgs.gh
 
+    pkgs.atuin
+
     # pkgs.vscode
     # pkgs.vscode-extensions.ms-python.python
     # pkgs.vscode-extensions.bazelbuild.vscode-bazel
@@ -54,6 +56,7 @@
   home.file = {
     ".bashrc".source = ./dotfiles/bashrc;
     ".bash_tmux".source = ./dotfiles/bash_tmux;
+    ".bash-preexec.sh".source = ./dotfiles/bash-preexec.sh;
     ".tmux.conf".source = ./dotfiles/tmux_conf;
     ".kube/config".source = ./dotfiles/kube_config;
     ".jupyter/jupyter_notebook_config.py".source = ./dotfiles/jupyter_jupyter_config.py;

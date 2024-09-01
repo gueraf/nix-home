@@ -51,6 +51,7 @@
     # pkgs.slack
 
     pkgs.go
+    pkgs.bmon
   ];
 
   home.file = {

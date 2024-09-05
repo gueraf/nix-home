@@ -15,7 +15,7 @@ source /home/fabian/.atuin/bin/env
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"
 alias raydash="kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers | xargs -I {} kubectl port-forward {} 8265:8265"
-alias sps="git stash && git pull && git stash --apply"
+alias sps="git stash && git pull && git stash apply"
 
 __atuin_bind_ctrl_r=true
 __atuin_bind_up_arrow=true

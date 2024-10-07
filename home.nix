@@ -52,6 +52,8 @@
 
     pkgs.go
     pkgs.bmon
+
+    pkgs.oraclejdk
   ];
 
   home.file = {

@@ -29,14 +29,13 @@
     pkgs.gh
 
     pkgs.atuin
-
+    pkgs.mysql-workbench
     # pkgs.vscode
     # pkgs.vscode-extensions.ms-python.python
     # pkgs.vscode-extensions.bazelbuild.vscode-bazel
     # pkgs.vscode-extensions.ms-toolsai.jupyter
     # pkgs.vscode-extensions.ms-kubernetes-tools.vscode-kubernetes-tools
 
-    pkgs.bazel_7
     pkgs.bazel-watcher
     pkgs.bazel-buildtools
 

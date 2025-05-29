@@ -29,7 +29,7 @@
     pkgs.gh
 
     pkgs.atuin
-    pkgs.mysql-workbench
+    # pkgs.mysql-workbench
     # pkgs.vscode
     # pkgs.vscode-extensions.ms-python.python
     # pkgs.vscode-extensions.bazelbuild.vscode-bazel
@@ -39,18 +39,19 @@
     pkgs.bazel-watcher
     pkgs.bazel-buildtools
 
-    pkgs.wl-clipboard
+    # pkgs.wl-clipboard
 
-    pkgs.kubernetes
-    pkgs.kubernetes-helm
-    pkgs.krew
+    # pkgs.kubernetes
+    # pkgs.kubernetes-helm
+    # pkgs.krew
     # pkgs.openfortivpn
-    pkgs.ookla-speedtest
+    # pkgs.ookla-speedtest
 
     # pkgs.slack
 
     pkgs.go
     pkgs.bmon
+    pkgs.bazel-buildtools
   ];
 
   home.file = {

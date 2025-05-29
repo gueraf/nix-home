@@ -28,6 +28,7 @@
     pkgs.htop
     pkgs.gh
 
+    pkgs.bash-preexec
     pkgs.atuin
     # pkgs.mysql-workbench
     # pkgs.vscode

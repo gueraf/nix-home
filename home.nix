@@ -25,8 +25,10 @@
     pkgs.git
     pkgs.git-lfs
     pkgs.git-crecord
+    pkgs.jujutsu
     pkgs.htop
     pkgs.gh
+    pkgs.hatch
 
     pkgs.bash-preexec
     pkgs.atuin

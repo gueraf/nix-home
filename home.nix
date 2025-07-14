@@ -55,6 +55,7 @@
     pkgs.go
     pkgs.bmon
     pkgs.bazel-buildtools
+    pkgs.bazelisk
   ];
 
   home.file = {

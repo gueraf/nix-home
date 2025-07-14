@@ -13,6 +13,7 @@ alias k="kubectl"
 alias raydash="kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers | xargs -I {} kubectl port-forward {} 8265:8265"
 alias sps="git stash && git pull && git stash apply"
 alias spsp="git stash && git pull && git stash apply && git push"
+alias bazel="bazelisk"
 
 ghcs() {
 	TARGET="shell"

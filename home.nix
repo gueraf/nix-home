@@ -56,6 +56,8 @@
     pkgs.bmon
     pkgs.bazel-buildtools
     pkgs.bazelisk
+
+    pkgs.uv
   ];
 
   home.file = {

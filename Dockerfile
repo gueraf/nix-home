@@ -81,6 +81,8 @@ RUN if cat /etc/passwd | grep 1000; then \
     fi
 RUN mkdir -p /home/fabian/ && chown fabian /home/fabian/
 
+USER fabian
+
 # Install nix
 # RUN curl -L https://nixos.org/nix/install | /bin/bash
 RUN wget https://nixos.org/nix/install -O /tmp/nix.sh && \
@@ -89,8 +91,6 @@ RUN wget https://nixos.org/nix/install -O /tmp/nix.sh && \
     rm /tmp/nix.sh
 
 RUN git config --global pull.rebase true
-
-USER fabian
 
 RUN git config --global user.name "Fabian Guera" && git config --global user.email "fabian.guera@gmail.com"
 

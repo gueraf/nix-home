@@ -70,12 +70,14 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 
 # Create fabian user or rename it, if it exists.
-RUN if cat /etc/passwd | grep 1000; then \
-    usermod -l fabian -d /home/fabian -m $(cat /etc/passwd | grep 1000 | grep -oP "^[^:]+") --shell /bin/bash --password ""; \
-    echo foo; \
-    else \
-    useradd --shell /bin/bash --password "" --home /home/fabian fabian; \
-    fi
+# RUN if cat /etc/passwd | grep 1000; then \
+#     usermod -l fabian -d /home/fabian -m $(cat /etc/passwd | grep 1000 | grep -oP "^[^:]+") --shell /bin/bash --password ""; \
+#     echo foo; \
+#     else \
+#     useradd --shell /bin/bash --password "" --home /home/fabian fabian; \
+#     fi
+RUN useradd --uid 1010 --shell /bin/bash --password "" --home /home/fabian fabian && \
+    echo "fabian ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN mkdir -p /home/fabian/ && chown fabian /home/fabian/
 
 COPY . /home/fabian/nix_home

@@ -13,17 +13,15 @@
     linkDesktopApplications = {
       after = [ "writeBoundary" "createXdgUserDirectories" ];
       before = [ ];
-      data = "/usr/bin/sudo /usr/bin/chmod -R 777 $HOME/.nix-profile/share/applications && /usr/bin/update-desktop-database $HOME/.nix-profile/share/applications";
+      data = "/usr/bin/sudo /usr/bin/chmod -R 777 $HOME/.nix-profile/share/applications && if [ -x /usr/bin/update-desktop-database ]; then /usr/bin/update-desktop-database $HOME/.nix-profile/share/applications; fi";
     };
   };
 
   home.packages = [
     pkgs.tmux
     pkgs.vim
-    pkgs.gedit
     pkgs.sublime
     pkgs.git
-    pkgs.git-lfs
     pkgs.git-crecord
     pkgs.jujutsu
     pkgs.htop
@@ -52,7 +50,7 @@
 
     # pkgs.slack
 
-    pkgs.go
+    # pkgs.go
     pkgs.bmon
     pkgs.bazel-buildtools
     pkgs.bazelisk

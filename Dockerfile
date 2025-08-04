@@ -9,13 +9,11 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     7zip \
     aria2 \
-    bmon \
     ca-certificates \
     curl \
     dnsutils \
     git \
     git-crecord \
-    htop \
     iproute2 \
     iputils-ping \
     ipython3 \
@@ -40,7 +38,6 @@ RUN apt-get update && \
     tmux \
     traceroute \
     unzip \
-    vim \
     wget \
     zip \
     zstd && \
@@ -65,7 +62,7 @@ RUN apt-get update && \
     apt-get install -y nsight-systems code && \
     apt clean
 
-RUN sudo npm install -g @bazel/bazelisk
+# RUN sudo npm install -g @bazel/bazelisk
 
 # Add Tini (to avoid zombie processes, e.g. from bazel)
 ENV TINI_VERSION="v0.19.0"
@@ -81,7 +78,11 @@ RUN if cat /etc/passwd | grep 1000; then \
     fi
 RUN mkdir -p /home/fabian/ && chown fabian /home/fabian/
 
+COPY . /home/fabian/nix_home
+RUN chown -R fabian /home/fabian/nix_home
 USER fabian
+# Home manager needs the USER env variable to be set... :(
+ENV USER=fabian
 
 # Install nix
 # RUN curl -L https://nixos.org/nix/install | /bin/bash
@@ -90,11 +91,6 @@ RUN wget https://nixos.org/nix/install -O /tmp/nix.sh && \
     ./tmp/nix.sh && \
     rm /tmp/nix.sh
 
-RUN git config --global pull.rebase true
-
-RUN git config --global user.name "Fabian Guera" && git config --global user.email "fabian.guera@gmail.com"
-
-COPY . /home/fabian/nix_home
 RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     $HOME/.nix-profile/bin/nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager && \
     $HOME/.nix-profile/bin/nix-channel --update && \
@@ -105,6 +101,9 @@ RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     atuin init bash >> /home/fabian/nix_home/dotfiles/bashrc && \
     $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
     $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
+
+RUN git config --global pull.rebase true
+RUN git config --global user.name "Fabian Guera" && git config --global user.email "fabian.guera@gmail.com"
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

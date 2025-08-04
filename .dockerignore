@@ -1,0 +1,7 @@
+# Ignore everything
+*
+
+# Except for these specific items
+!home.nix
+!nix-home/
+!dotfiles/

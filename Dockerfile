@@ -1,4 +1,5 @@
-FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
+FROM nvidia/cuda:12.6.3-devel-ubuntu24.04
+# FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
 
 # RUN ulimit -l unlimited
 RUN echo "* soft memlock unlimited" | tee /etc/security/limits.conf

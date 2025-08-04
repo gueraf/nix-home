@@ -1,4 +1,4 @@
-FROM nvidia/cuda: 12.9.1-devel-ubuntu24.04
+FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
 
 # RUN ulimit -l unlimited
 RUN echo "* soft memlock unlimited" | tee /etc/security/limits.conf
@@ -95,7 +95,7 @@ USER fabian
 
 RUN git config --global user.name "Fabian Guera" && git config --global user.email "fabian.guera@gmail.com"
 
-COPY ./nix_home /home/fabian/nix_home
+COPY . /home/fabian/nix_home
 RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     $HOME/.nix-profile/bin/nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager && \
     $HOME/.nix-profile/bin/nix-channel --update && \

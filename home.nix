@@ -59,6 +59,7 @@
   ];
 
   home.file = {
+    ".bash_profile".source = ./dotfiles/bash_profile;
     ".bashrc".source = ./dotfiles/bashrc;
     ".bash_tmux".source = ./dotfiles/bash_tmux;
     ".bash-preexec.sh".source = ./dotfiles/bash-preexec.sh;

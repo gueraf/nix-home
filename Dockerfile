@@ -63,8 +63,7 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
 
 RUN apt-get update && \
     apt-get install -y nsight-systems code && \
-    apt clean && \
-    git lfs install
+    apt clean
 
 RUN sudo npm install -g @bazel/bazelisk
 

@@ -48,7 +48,7 @@ RUN apt-get update && \
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 # Add repo for nsight profiler
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
 RUN export ARCH=$(dpkg --print-architecture) && \
     export REL=$(. /etc/lsb-release; echo "$DISTRIB_RELEASE" | tr -d .) && \
     add-apt-repository "deb https://developer.download.nvidia.com/devtools/repos/ubuntu$REL/$ARCH/ /"
@@ -60,7 +60,7 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     rm -f packages.microsoft.gpg
 
 RUN apt-get update && \
-    apt-get install -y nsight-systems code && \
+    apt-get install -y nsight-systems code libcusparselt0 libcusparselt-dev && \
     apt clean
 
 # RUN sudo npm install -g @bazel/bazelisk

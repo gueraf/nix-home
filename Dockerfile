@@ -61,7 +61,7 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     rm -f packages.microsoft.gpg
 
 RUN apt-get update && \
-    apt-get install -y nsight-systems code libcusparselt0 libcusparselt-dev && \
+    apt-get install -y nsight-systems code libcusparselt0 libcusparselt-dev libcudnn9-cuda-12 && \
     apt clean
 
 # RUN sudo npm install -g @bazel/bazelisk

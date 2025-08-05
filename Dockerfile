@@ -107,8 +107,11 @@ RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
 
 RUN git config --global pull.rebase true
-RUN git config --global user.name "Fabian Guera" && git config --global user.email "fabian.guera@gmail.com"
-RUN jj config set --user user.name "Fabian Guera" && jj config set --user user.email "fabian.guera@gmail.com"
+RUN git config --global user.name "Fabian Guera" && \
+    git config --global user.email "fabian@odyssey.systems"
+RUN jj config set --user user.name "Fabian Guera" && \
+    jj config set --user user.email "fabian@odyssey.systems" && \
+    jj config set --user ui.default-command log
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

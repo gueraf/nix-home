@@ -48,11 +48,9 @@ RUN apt-get update && \
 
 # Install docker (https://docs.docker.com/engine/install/ubuntu/)
 RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
-    sudo sh get-docker.sh && \
+    sh get-docker.sh && \
     rm get-docker.sh && \
-    sudo groupadd docker || true && \
-    sudo usermod -aG docker $USER || true && \
-    newgrp docker || true
+    groupadd docker || true
 
 # Initialize jupyter
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
@@ -123,6 +121,9 @@ RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
     $HOME/.nix-profile/bin/jj config set --user user.email "fabian@odyssey.systems" && \
     $HOME/.nix-profile/bin/jj config set --user ui.default-command log && \
     $HOME/.nix-profile/bin/jj config set --user ui.editor vim
+
+RUN sudo usermod -aG docker $USER || true && \
+    sudo newgrp docker || true
 
 # RUN sudo chmod u+s $(which nsys) && \
 #     sudo chmod u+s $(which ncu)

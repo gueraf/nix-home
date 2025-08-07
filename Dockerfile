@@ -46,6 +46,14 @@ RUN apt-get update && \
     zstd && \
     apt clean
 
+# Install docker (https://docs.docker.com/engine/install/ubuntu/)
+RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sudo sh get-docker.sh && \
+    rm get-docker.sh && \
+    sudo groupadd docker && \
+    sudo usermod -aG docker $USER && \
+    newgrp docker
+
 # Initialize jupyter
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
@@ -56,7 +64,7 @@ RUN export ARCH=$(dpkg --print-architecture) && \
     export REL=$(. /etc/lsb-release; echo "$DISTRIB_RELEASE" | tr -d .) && \
     add-apt-repository "deb https://developer.download.nvidia.com/devtools/repos/ubuntu$REL/$ARCH/ /"
 
-# Add repod for vscode
+# Add repo for vscode
 RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
     install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && \
     echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list > /dev/null && \
@@ -116,8 +124,8 @@ RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
     $HOME/.nix-profile/bin/jj config set --user ui.default-command log && \
     $HOME/.nix-profile/bin/jj config set --user ui.editor vim
 
-RUN sudo chmod u+s $(which nsys) && \
-    sudo chmod u+s $(which ncu)
+# RUN sudo chmod u+s $(which nsys) && \
+#     sudo chmod u+s $(which ncu)
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

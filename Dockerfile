@@ -113,8 +113,11 @@ RUN git config --global user.name "Fabian Guera" && \
     git config --global user.email "fabian@odyssey.systems"
 RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
     $HOME/.nix-profile/bin/jj config set --user user.email "fabian@odyssey.systems" && \
-    $HOME/.nix-profile/bin/jj config set --user ui.default-command log &&
+    $HOME/.nix-profile/bin/jj config set --user ui.default-command log && \
     $HOME/.nix-profile/bin/jj config set --user ui.editor vim
+
+RUN sudo chmod u+s $(which nsys) && \
+    sudo chmod u+s $(which ncu)
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

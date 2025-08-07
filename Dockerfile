@@ -50,9 +50,9 @@ RUN apt-get update && \
 RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
     sudo sh get-docker.sh && \
     rm get-docker.sh && \
-    sudo groupadd docker && \
-    sudo usermod -aG docker $USER && \
-    newgrp docker
+    sudo groupadd docker || true && \
+    sudo usermod -aG docker $USER || true && \
+    newgrp docker || true
 
 # Initialize jupyter
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension

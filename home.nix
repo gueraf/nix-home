@@ -56,6 +56,7 @@
     pkgs.bazelisk
 
     pkgs.uv
+    pkgs.azure-cli
   ];
 
   home.file = {

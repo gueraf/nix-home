@@ -42,7 +42,7 @@
 
     # pkgs.wl-clipboard
 
-    # pkgs.kubernetes
+    pkgs.kubernetes
     # pkgs.kubernetes-helm
     # pkgs.krew
     # pkgs.openfortivpn
@@ -57,6 +57,7 @@
 
     pkgs.uv
     pkgs.azure-cli
+    pkgs.kubelogin
   ];
 
   home.file = {

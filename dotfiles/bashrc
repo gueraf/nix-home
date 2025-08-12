@@ -1,4 +1,4 @@
-export PATH=/home/fabian/bin:/home/fabian/.atuin/bin:$PATH
+export PATH=/home/fabian/.local/bin:/home/fabian/bin:/home/fabian/.atuin/bin:$PATH
 
 . /home/fabian/.nix-profile/etc/profile.d/nix.sh
 

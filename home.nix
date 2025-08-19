@@ -20,7 +20,6 @@
   home.packages = [
     pkgs.tmux
     pkgs.vim
-    pkgs.sublime
     pkgs.git
     pkgs.git-crecord
     pkgs.jujutsu

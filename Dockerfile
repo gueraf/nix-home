@@ -122,7 +122,7 @@ RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
     $HOME/.nix-profile/bin/jj config set --user ui.default-command log && \
     $HOME/.nix-profile/bin/jj config set --user ui.editor vim
 
-RUN pipx install huggingface_hub[cli]
+RUN pipx install huggingface_hub[cli] ninja
 
 RUN sudo usermod -aG docker $USER || true && \
     sudo newgrp docker || true

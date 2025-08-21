@@ -57,7 +57,6 @@
     pkgs.uv
     pkgs.azure-cli
     pkgs.kubelogin
-    pkgs.cmake
   ];
 
   home.file = {

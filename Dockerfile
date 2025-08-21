@@ -13,6 +13,7 @@ RUN apt-get update && \
     7zip \
     aria2 \
     ca-certificates \
+    cmake \
     curl \
     dnsutils \
     git \

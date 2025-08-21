@@ -43,7 +43,8 @@ RUN apt-get update && \
     unzip \
     wget \
     zip \
-    zstd && \
+    zstd \
+    zlib1g-dev && \
     apt clean
 
 # Install docker (https://docs.docker.com/engine/install/ubuntu/)

@@ -56,7 +56,6 @@
 
     pkgs.uv
     pkgs.azure-cli
-    pkgs.google-cloud-sdk
     pkgs.kubelogin
   ];
 

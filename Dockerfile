@@ -54,6 +54,10 @@ RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
     rm get-docker.sh && \
     groupadd docker || true
 
+# GCP repo
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
 # Initialize jupyter
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
@@ -71,7 +75,7 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     rm -f packages.microsoft.gpg
 
 RUN apt-get update && \
-    apt-get install -y nsight-systems code libcusparselt0 libcusparselt-dev libcudnn9-cuda-12 && \
+    apt-get install -y nsight-systems code libcusparselt0 libcusparselt-dev libcudnn9-cuda-12 google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin && \
     apt clean
 
 # RUN sudo npm install -g @bazel/bazelisk

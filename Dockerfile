@@ -1,6 +1,6 @@
-FROM nvidia/cuda:12.6.3-devel-ubuntu24.04
-ENV CUDA_HOME=/usr/local/cuda-12.6/
-ENV CUDA_LIB_PATH=/usr/local/cuda-12.6/lib64
+FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
+ENV CUDA_HOME=/usr/local/cuda-12.9/
+ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
 # FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
 
 # RUN ulimit -l unlimited

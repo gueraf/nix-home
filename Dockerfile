@@ -34,6 +34,7 @@ RUN apt-get update && \
     tini \
     tmux \
     traceroute \
+    vim \
     unzip \
     wget \
     zip \

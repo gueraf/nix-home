@@ -18,14 +18,14 @@
   };
 
   home.packages = [
-    pkgs.tmux
-    pkgs.vim
-    pkgs.git
-    pkgs.git-crecord
+    # pkgs.tmux
+    # pkgs.vim
+    # pkgs.git
+    # pkgs.git-crecord
     pkgs.jujutsu
     pkgs.htop
     pkgs.gh
-    pkgs.hatch
+    # pkgs.hatch
 
     pkgs.bash-preexec
     pkgs.atuin

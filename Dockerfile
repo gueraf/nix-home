@@ -1,7 +1,6 @@
 FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
 ENV CUDA_HOME=/usr/local/cuda-12.9/
 ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
-# FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
 
 # RUN ulimit -l unlimited
 RUN echo "* soft memlock unlimited" | tee /etc/security/limits.conf
@@ -10,25 +9,19 @@ RUN echo "* hard memlock unlimited" | tee /etc/security/limits.conf
 # Install app dependencies
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    7zip \
-    aria2 \
     ca-certificates \
     cmake \
     curl \
     dnsutils \
     git \
-    git-crecord \
     iproute2 \
     iputils-ping \
     ipython3 \
-    jupyter-nbconvert \
-    jupyter-notebook \
     less \
     npm \
     nvtop \
     parallel \
     pipx \
-    perftest \
     pigz \
     python3 \
     python-is-python3 \
@@ -49,17 +42,17 @@ RUN apt-get update && \
     apt clean
 
 # Install docker (https://docs.docker.com/engine/install/ubuntu/)
-RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
-    sh get-docker.sh && \
-    rm get-docker.sh && \
-    groupadd docker || true
+# RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
+#     sh get-docker.sh && \
+#     rm get-docker.sh && \
+#     groupadd docker || true
 
 # GCP repo
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
 # Initialize jupyter
-RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
+# RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 # Add repo for nsight profiler
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub && \
@@ -75,7 +68,14 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     rm -f packages.microsoft.gpg
 
 RUN apt-get update && \
-    apt-get install -y nsight-systems code libcusparselt0 libcusparselt-dev libcudnn9-cuda-12 google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin && \
+    apt-get install -y \
+    nsight-systems \
+    code \
+    libcusparselt0 \
+    libcusparselt-dev \
+    libcudnn9-cuda-12 \
+    google-cloud-cli \
+    google-cloud-sdk-gke-gcloud-auth-plugin && \
     apt clean
 
 # RUN sudo npm install -g @bazel/bazelisk
@@ -136,10 +136,10 @@ RUN sudo usermod -aG docker $USER || true && \
 # RUN sudo chmod u+s $(which nsys) && \
 #     sudo chmod u+s $(which ncu)
 
-RUN curl -L https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz -o gdrive_linux-x64.tar.gz && \
-    tar -xz < gdrive_linux-x64.tar.gz && \
-    sudo mv gdrive /bin/ && \
-    rm gdrive_linux-x64.tar.gz
+# RUN curl -L https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz -o gdrive_linux-x64.tar.gz && \
+#     tar -xz < gdrive_linux-x64.tar.gz && \
+#     sudo mv gdrive /bin/ && \
+#     rm gdrive_linux-x64.tar.gz
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

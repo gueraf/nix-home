@@ -137,7 +137,8 @@ RUN sudo usermod -aG docker $USER || true && \
 # RUN sudo chmod u+s $(which nsys) && \
 #     sudo chmod u+s $(which ncu)
 
-RUN curl -L https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz -o gdrive_linux-x64.tar.gz && \
+RUN cd /tmp/ && \
+    wget https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz && \
     tar -xz < gdrive_linux-x64.tar.gz && \
     sudo mv gdrive /bin/ && \
     rm gdrive_linux-x64.tar.gz

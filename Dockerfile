@@ -43,10 +43,10 @@ RUN apt-get update && \
     apt clean
 
 # Install docker (https://docs.docker.com/engine/install/ubuntu/)
-# RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
-#     sh get-docker.sh && \
-#     rm get-docker.sh && \
-#     groupadd docker || true
+RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sh get-docker.sh && \
+    rm get-docker.sh && \
+    groupadd docker || true
 
 # GCP repo
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \

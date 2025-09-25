@@ -42,6 +42,7 @@
     # pkgs.wl-clipboard
 
     pkgs.kubernetes
+    pkgs.k9s
     # pkgs.kubernetes-helm
     # pkgs.krew
     # pkgs.openfortivpn

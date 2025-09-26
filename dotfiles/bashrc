@@ -7,7 +7,9 @@ export PATH=/home/fabian/.local/bin:/home/fabian/bin:/home/fabian/.atuin/bin:$PA
 # source /home/fabian/.atuin/bin/env
 
 [[ -f ~/env/export_env.sh ]] && source ~/env/export_env.sh
+[[ -f ~/host_fabian/env/export_env.sh ]] && source ~/host_fabian/env/export_env.sh
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
 
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"

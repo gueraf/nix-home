@@ -1,6 +1,7 @@
 export PATH=/home/fabian/.local/bin:/home/fabian/bin:/home/fabian/.atuin/bin:$PATH
 
-. /home/fabian/.nix-profile/etc/profile.d/nix.sh
+if [ -f /home/fabian/.nix-profile/etc/profile.d/nix.sh ]; then . /home/fabian/.nix-profile/etc/profile.d/nix.sh; fi
+if [ -f /home/fabian/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . /home/fabian/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
 
 . ~/.bash_tmux
 

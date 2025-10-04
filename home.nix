@@ -18,7 +18,7 @@
   };
 
   home.packages = [
-    # pkgs.tmux
+    pkgs.tmux
     # pkgs.vim
     # pkgs.git
     # pkgs.git-crecord

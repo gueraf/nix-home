@@ -26,6 +26,7 @@
     pkgs.htop
     pkgs.gh
     # pkgs.hatch
+    pkgs.act
 
     pkgs.bash-preexec
     pkgs.atuin

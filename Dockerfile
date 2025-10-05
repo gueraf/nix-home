@@ -130,6 +130,7 @@ RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
     $HOME/.nix-profile/bin/jj config set --user ui.editor vim
 
 RUN pipx install huggingface_hub[cli] ninja
+RUN sudo npm install -g @github/copilot
 
 RUN sudo usermod -aG docker $USER || true && \
     sudo newgrp docker || true

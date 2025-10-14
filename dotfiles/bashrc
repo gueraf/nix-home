@@ -9,8 +9,8 @@ if [ -f /home/fabian/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . /ho
 
 [[ -f ~/env/export_env.sh ]] && source ~/env/export_env.sh
 [[ -f ~/host_fabian/env/export_env.sh ]] && source ~/host_fabian/env/export_env.sh
+[[ -f /mnt/data/local/fabian/env/export_env.sh ]] && source /mnt/data/local/fabian/env/export_env.sh
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-
 
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"

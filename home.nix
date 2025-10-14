@@ -59,6 +59,7 @@
     pkgs.uv
     pkgs.azure-cli
     pkgs.kubelogin
+    pkgs.terraform
   ];
 
   home.file = {

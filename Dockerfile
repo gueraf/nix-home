@@ -122,6 +122,7 @@ RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
 
 RUN git config --global pull.rebase true
+RUN git config --global core.editor "vim"
 RUN git config --global user.name "Fabian Guera" && \
     git config --global user.email "fabian@odyssey.systems"
 RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \

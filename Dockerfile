@@ -1,4 +1,4 @@
-ARG TARGETARCH
+ARG TARGETARCH=amd64
 FROM --platform=linux/${TARGETARCH} nvidia/cuda:12.9.1-devel-ubuntu24.04
 ENV CUDA_HOME=/usr/local/cuda-12.9/
 ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
@@ -56,14 +56,9 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -
 # Initialize jupyter
 # RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
-# Add repo for nsight profiler
-RUN export NVIDIA_ARCH=${TARGETARCH} && \
-    if [ "${TARGETARCH}" = "amd64" ]; then NVIDIA_ARCH="x86_64"; fi && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/${NVIDIA_ARCH}/7fa2af80.pub && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/${NVIDIA_ARCH}/3bf863cc.pub
-RUN export ARCH=$(dpkg --print-architecture) && \
-    export REL=$(. /etc/lsb-release; echo "$DISTRIB_RELEASE" | tr -d .) && \
-    add-apt-repository "deb https://developer.download.nvidia.com/devtools/repos/ubuntu$REL/$ARCH/ /"
+RUN curl -fSsL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub | gpg --dearmor | tee /usr/share/keyrings/nvidia-drivers.gpg > /dev/null 2>&1
+RUN echo 'deb [signed-by=/usr/share/keyrings/nvidia-drivers.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /' | tee /etc/apt/sources.list.d/cuda.list
+# RUN echo 'deb [signed-by=/usr/share/keyrings/nvidia-drivers.gpg] https://developer.download.nvidia.com/devtools/repos/ubuntu2404/x86_64/ /' | tee /etc/apt/sources.list.d/nvidia-devtools.list
 
 # Add repo for vscode
 RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
@@ -73,14 +68,10 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
 
 RUN apt-get update && \
     apt-get install -y \
-    nsight-systems \
     code \
-    libcusparselt0 \
-    libcusparselt-dev \
-    libcudnn9-cuda-12 \
     google-cloud-cli \
-    google-cloud-sdk-gke-gcloud-auth-plugin && \
-    apt clean
+    google-cloud-sdk-gke-gcloud-auth-plugin
+RUN apt clean
 
 # RUN sudo npm install -g @bazel/bazelisk
 

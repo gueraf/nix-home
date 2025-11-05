@@ -77,7 +77,7 @@ RUN apt clean
 
 # Add Tini (to avoid zombie processes, e.g. from bazel)
 ENV TINI_VERSION="v0.19.0"
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-amd64 /tini
 RUN chmod +x /tini
 
 # Create fabian user or rename it, if it exists.

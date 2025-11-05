@@ -133,17 +133,10 @@ RUN sudo usermod -aG docker $USER || true && \
 # RUN sudo chmod u+s $(which nsys) && \
 #     sudo chmod u+s $(which ncu)
 
-# RUN cd /tmp/ && \
-#     if [ "${TARGETARCH}" = "amd64" ]; then \
-#         wget https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz && \
-#         tar -xz < gdrive_linux-x64.tar.gz && \
-#         sudo mv gdrive /bin/ && \
-#         rm gdrive_linux-x64.tar.gz; \
-#     elif [ "${TARGETARCH}" = "arm64" ]; then \
-#         wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
-#         sudo mv gdrive-linux-arm64 /bin/gdrive && \
-#         sudo chmod +x /bin/gdrive; \
-#     fi
+RUN cd /tmp/ && \
+    wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
+    sudo mv gdrive-linux-arm64 /bin/gdrive && \
+    sudo chmod +x /bin/gdrive
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

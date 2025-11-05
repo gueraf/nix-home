@@ -16,6 +16,6 @@ if ! docker buildx inspect multiarch_builder > /dev/null 2>&1; then
 fi
 
 echo "Building and pushing multi-arch Docker image..."
-docker buildx build --platform linux/amd64,linux/arm64 -t gueraf/dev:latest . --push
+docker buildx build --platform linux/arm64 -t gueraf/dev:arm . --push
 
 echo "Done! Image gueraf/dev:latest has been built and pushed for amd64 and arm64."

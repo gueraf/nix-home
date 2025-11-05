@@ -1,4 +1,4 @@
-ARG TARGETARCH=amd64
+ARG TARGETARCH=arm64
 FROM --platform=linux/${TARGETARCH} nvidia/cuda:12.9.1-devel-ubuntu24.04
 ENV CUDA_HOME=/usr/local/cuda-12.9/
 ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64

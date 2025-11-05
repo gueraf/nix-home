@@ -99,33 +99,33 @@ ENV USER=fabian
 
 # Install nix
 # RUN curl -L https://nixos.org/nix/install | /bin/bash
-RUN wget https://nixos.org/nix/install -O /tmp/nix.sh && \
-    chmod +x /tmp/nix.sh && \
-    ./tmp/nix.sh && \
-    rm /tmp/nix.sh
+# RUN wget https://nixos.org/nix/install -O /tmp/nix.sh && \
+#     chmod +x /tmp/nix.sh && \
+#     ./tmp/nix.sh && \
+#     rm /tmp/nix.sh
 
-RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
-    $HOME/.nix-profile/bin/nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager && \
-    $HOME/.nix-profile/bin/nix-channel --update && \
-    $HOME/.nix-profile/bin/nix-shell '<home-manager>' -A install && \
-    rm -f ~/.bashrc && \
-    rm -rf ~/.cache && \
-    $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
-    atuin init bash >> /home/fabian/nix_home/dotfiles/bashrc && \
-    $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
-    $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
+# RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
+#     $HOME/.nix-profile/bin/nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager && \
+#     $HOME/.nix-profile/bin/nix-channel --update && \
+#     $HOME/.nix-profile/bin/nix-shell '<home-manager>' -A install && \
+#     rm -f ~/.bashrc && \
+#     rm -rf ~/.cache && \
+#     $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
+#     atuin init bash >> /home/fabian/nix_home/dotfiles/bashrc && \
+#     $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
+#     $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
 
-RUN git config --global pull.rebase true
-RUN git config --global core.editor "vim"
-RUN git config --global user.name "Fabian Guera" && \
-    git config --global user.email "fabian@odyssey.systems"
-RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
-    $HOME/.nix-profile/bin/jj config set --user user.email "fabian@odyssey.systems" && \
-    $HOME/.nix-profile/bin/jj config set --user ui.default-command log && \
-    $HOME/.nix-profile/bin/jj config set --user ui.editor vim
+# RUN git config --global pull.rebase true
+# RUN git config --global core.editor "vim"
+# RUN git config --global user.name "Fabian Guera" && \
+#     git config --global user.email "fabian@odyssey.systems"
+# RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
+#     $HOME/.nix-profile/bin/jj config set --user user.email "fabian@odyssey.systems" && \
+#     $HOME/.nix-profile/bin/jj config set --user ui.default-command log && \
+#     $HOME/.nix-profile/bin/jj config set --user ui.editor vim
 
-RUN pipx install huggingface_hub[cli] ninja
-RUN sudo npm install -g @github/copilot
+# RUN pipx install huggingface_hub[cli] ninja
+# RUN sudo npm install -g @github/copilot
 
 RUN sudo usermod -aG docker $USER || true && \
     sudo newgrp docker || true
@@ -133,17 +133,17 @@ RUN sudo usermod -aG docker $USER || true && \
 # RUN sudo chmod u+s $(which nsys) && \
 #     sudo chmod u+s $(which ncu)
 
-RUN cd /tmp/ && \
-    if [ "${TARGETARCH}" = "amd64" ]; then \
-        wget https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz && \
-        tar -xz < gdrive_linux-x64.tar.gz && \
-        sudo mv gdrive /bin/ && \
-        rm gdrive_linux-x64.tar.gz; \
-    elif [ "${TARGETARCH}" = "arm64" ]; then \
-        wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
-        sudo mv gdrive-linux-arm64 /bin/gdrive && \
-        sudo chmod +x /bin/gdrive; \
-    fi
+# RUN cd /tmp/ && \
+#     if [ "${TARGETARCH}" = "amd64" ]; then \
+#         wget https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz && \
+#         tar -xz < gdrive_linux-x64.tar.gz && \
+#         sudo mv gdrive /bin/ && \
+#         rm gdrive_linux-x64.tar.gz; \
+#     elif [ "${TARGETARCH}" = "arm64" ]; then \
+#         wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
+#         sudo mv gdrive-linux-arm64 /bin/gdrive && \
+#         sudo chmod +x /bin/gdrive; \
+#     fi
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

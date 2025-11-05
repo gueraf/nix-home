@@ -133,10 +133,10 @@ RUN sudo usermod -aG docker $USER || true && \
 # RUN sudo chmod u+s $(which nsys) && \
 #     sudo chmod u+s $(which ncu)
 
-RUN cd /tmp/ && \
-    wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
-    sudo mv gdrive-linux-arm64 /bin/gdrive && \
-    sudo chmod +x /bin/gdrive
+# RUN cd /tmp/ && \
+#     wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
+#     sudo mv gdrive-linux-arm64 /bin/gdrive && \
+#     sudo chmod +x /bin/gdrive
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

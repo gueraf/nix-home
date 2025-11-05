@@ -1,4 +1,5 @@
-FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
+ARG TARGETARCH
+FROM --platform=linux/${TARGETARCH} nvidia/cuda:12.9.1-devel-ubuntu24.04
 ENV CUDA_HOME=/usr/local/cuda-12.9/
 ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
 
@@ -56,8 +57,10 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -
 # RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 # Add repo for nsight profiler
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub
+RUN export NVIDIA_ARCH=${TARGETARCH} && \
+    if [ "${TARGETARCH}" = "amd64" ]; then NVIDIA_ARCH="x86_64"; fi && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/${NVIDIA_ARCH}/7fa2af80.pub && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/${NVIDIA_ARCH}/3bf863cc.pub
 RUN export ARCH=$(dpkg --print-architecture) && \
     export REL=$(. /etc/lsb-release; echo "$DISTRIB_RELEASE" | tr -d .) && \
     add-apt-repository "deb https://developer.download.nvidia.com/devtools/repos/ubuntu$REL/$ARCH/ /"
@@ -140,10 +143,16 @@ RUN sudo usermod -aG docker $USER || true && \
 #     sudo chmod u+s $(which ncu)
 
 RUN cd /tmp/ && \
-    wget https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz && \
-    tar -xz < gdrive_linux-x64.tar.gz && \
-    sudo mv gdrive /bin/ && \
-    rm gdrive_linux-x64.tar.gz
+    if [ "${TARGETARCH}" = "amd64" ]; then \
+        wget https://github.com/glotlabs/gdrive/releases/download/3.9.1/gdrive_linux-x64.tar.gz && \
+        tar -xz < gdrive_linux-x64.tar.gz && \
+        sudo mv gdrive /bin/ && \
+        rm gdrive_linux-x64.tar.gz; \
+    elif [ "${TARGETARCH}" = "arm64" ]; then \
+        wget https://raw.githubusercontent.com/AnimMouse/gdrive-binaries/master/linux/gdrive-linux-arm64 && \
+        sudo mv gdrive-linux-arm64 /bin/gdrive && \
+        sudo chmod +x /bin/gdrive; \
+    fi
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]

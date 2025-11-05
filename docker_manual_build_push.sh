@@ -9,10 +9,7 @@ if ! groups fabian | grep -q "docker"; then
     su fabian -
 fi
 
-echo "Building Docker image..."
-docker build -t gueraf/dev:latest .
+echo "Building and pushing multi-arch Docker image..."
+docker buildx build --platform linux/amd64,linux/arm64 -t gueraf/dev:latest . --push
 
-echo "Pushing Docker image to Docker Hub..."
-docker push gueraf/dev:latest
-
-echo "Done! Image gueraf/dev:latest has been built and pushed."
+echo "Done! Image gueraf/dev:latest has been built and pushed for amd64 and arm64."

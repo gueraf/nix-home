@@ -61,6 +61,7 @@
     pkgs.azure-cli
     pkgs.kubelogin
     pkgs.terraform
+    pkgs.rclone
   ];
 
   home.file = {

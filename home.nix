@@ -71,7 +71,8 @@
     ".bash-preexec.sh".source = ./dotfiles/bash-preexec.sh;
     ".tmux.conf".source = ./dotfiles/tmux_conf;
     ".jupyter/jupyter_notebook_config.py".source = ./dotfiles/jupyter_jupyter_config.py;
-    ".jupyter/jupyter_server_config.py".source = ./dotfiles/jupyter_jupyter_config.py; 
+    ".jupyter/jupyter_server_config.py".source = ./dotfiles/jupyter_jupyter_config.py;
+    ".config/k9s/plugins/start_gpu_pod.yaml".source = ./dotfiles/k9s_plugin_start_gpu_pod.yaml;
   };
 
   programs.home-manager.enable = true;

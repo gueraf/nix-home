@@ -25,7 +25,7 @@
     # pkgs.git-crecord
     pkgs.jujutsu
     pkgs.htop
-    pkgs.gh
+    # pkgs.gh  # Installed via APT in Dockerfile instead
     # pkgs.hatch
     pkgs.act
 

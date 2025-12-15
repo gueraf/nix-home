@@ -66,9 +66,20 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list > /dev/null && \
     rm -f packages.microsoft.gpg
 
+# Install GitHub CLI
+RUN (type -p wget >/dev/null || (apt update && apt install wget -y)) && \
+    mkdir -p -m 755 /etc/apt/keyrings && \
+    wget -nv -O /tmp/githubcli-archive-keyring.gpg https://cli.github.com/packages/githubcli-archive-keyring.gpg && \
+    cat /tmp/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null && \
+    chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && \
+    mkdir -p -m 755 /etc/apt/sources.list.d && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    rm /tmp/githubcli-archive-keyring.gpg
+
 RUN apt-get update && \
     apt-get install -y \
     code \
+    gh \
     google-cloud-cli \
     google-cloud-sdk-gke-gcloud-auth-plugin
 RUN apt clean

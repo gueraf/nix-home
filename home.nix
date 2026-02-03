@@ -50,7 +50,7 @@
     # pkgs.openfortivpn
     # pkgs.ookla-speedtest
 
-    # pkgs.slack
+    pkgs.slack-cli
 
     # pkgs.go
     pkgs.bmon

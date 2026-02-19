@@ -3,7 +3,7 @@
 {
   nixpkgs.config.allowUnfree = true;
   targets.genericLinux.enable = true;
-  targets.genericLinux.gpu.enable = false;
+  # targets.genericLinux.gpu.enable = false;
   home.username = "fabian";
   home.homeDirectory = "/home/fabian";
 

@@ -10,15 +10,35 @@ plugins:
     args:
       - -c
       - |
-        JSON=$(kubectl get pytorchjob --all-namespaces --context "$CONTEXT" -o json 2>&1)
+        JOBS_FILE=$(mktemp)
+        PODS_FILE=$(mktemp)
+        trap "rm -f $JOBS_FILE $PODS_FILE" EXIT
+
+        kubectl get pytorchjob --all-namespaces --context "$CONTEXT" -o json > "$JOBS_FILE" 2>&1
         if [ $? -ne 0 ]; then
-          echo "Error: $JSON"
+          echo "Error: $(cat $JOBS_FILE)"
           read -p "Press Enter to close..."
           exit 1
         fi
 
-        echo "$JSON" | jq -r '
-          .items
+        kubectl get pods --all-namespaces --context "$CONTEXT" -l training.kubeflow.org/job-name -o json > "$PODS_FILE" 2>&1
+        if [ $? -ne 0 ]; then
+          echo "Error fetching pods: $(cat $PODS_FILE)"
+          read -p "Press Enter to close..."
+          exit 1
+        fi
+
+        jq -r -n 'input as $jobs | input as $pods |
+          # Build map of job-name -> list of node names
+          ($pods.items | map({
+            job: (.metadata.labels["training.kubeflow.org/job-name"] // ""),
+            node: (.spec.nodeName // "pending")
+          }) | group_by(.job) | map({
+            key: .[0].job,
+            value: (map(.node) | unique | join(","))
+          }) | from_entries) as $nodeMap |
+
+          $jobs.items
           | map(select(
               .status.conditions // [] | map(select(.type == "Running" and .status == "True")) | length > 0
             ))
@@ -30,17 +50,17 @@ plugins:
                 (.spec.pytorchReplicaSpecs.Worker.replicas // 0) as $wr |
                 ((.spec.pytorchReplicaSpecs.Master.template.spec.containers[0].resources.limits["nvidia.com/gpu"] // "0") | tonumber) as $mg |
                 ((.spec.pytorchReplicaSpecs.Worker.template.spec.containers[0].resources.limits["nvidia.com/gpu"] // "0") | tonumber) as $wg |
-                { ns: .metadata.namespace, name: .metadata.name, nodes: ($mr + $wr), gpus: ($mr * $mg + $wr * $wg) }
+                { ns: .metadata.namespace, name: .metadata.name, nodes: ($mr + $wr), gpus: ($mr * $mg + $wr * $wg), nodeNames: ($nodeMap[.metadata.name] // "-") }
               ) as $rows |
               ($rows | map(.nodes) | add) as $tn |
               ($rows | map(.gpus) | add) as $tg |
-              ["NAMESPACE\tNAME\tNODES\tGPUs"] +
-              ($rows | map("\(.ns)\t\(.name)\t\(.nodes)\t\(.gpus)")) +
-              ["─\t─\t─\t─"] +
-              ["TOTAL\t\($rows | length) jobs\t\($tn)\t\($tg)"]
+              ["NAMESPACE\tNAME\tNODES\tGPUs\tNODE-NAMES"] +
+              ($rows | map("\(.ns)\t\(.name)\t\(.nodes)\t\(.gpus)\t\(.nodeNames)")) +
+              ["─\t─\t─\t─\t─"] +
+              ["TOTAL\t\($rows | length) jobs\t\($tn)\t\($tg)\t"]
               | .[]
             end
-        ' | column -t -s$'\t'
+        ' "$JOBS_FILE" "$PODS_FILE" | column -t -s$'\t'
 
         echo ""
         read -p "Press Enter to close..."

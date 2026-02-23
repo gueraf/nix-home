@@ -1,0 +1,58 @@
+plugins:
+  node-gpu-summary:
+    shortCut: t
+    description: "GPU usage per node"
+    scopes:
+      - nodes
+    command: bash
+    background: false
+    confirm: false
+    args:
+      - -c
+      - |
+        NODES=$(kubectl get nodes --context "$CONTEXT" -o json 2>&1)
+        if [ $? -ne 0 ]; then
+          echo "Error: $NODES"
+          read -p "Press Enter to close..."
+          exit 1
+        fi
+
+        PODS=$(kubectl get pods --all-namespaces --context "$CONTEXT" --field-selector=status.phase=Running -o json 2>&1)
+        if [ $? -ne 0 ]; then
+          echo "Error fetching pods: $PODS"
+          read -p "Press Enter to close..."
+          exit 1
+        fi
+
+        jq -r -n --argjson nodes "$NODES" --argjson pods "$PODS" '
+          # Build a map of node -> allocated GPUs from running pods
+          ($pods.items | map(
+            (.spec.nodeName // empty) as $node |
+            (.spec.containers // [] | map(
+              .resources.requests["nvidia.com/gpu"] // .resources.limits["nvidia.com/gpu"] // "0" | tonumber
+            ) | add) as $gpus |
+            { node: $node, gpus: $gpus }
+          ) | group_by(.node) | map({ key: .[0].node, value: (map(.gpus) | add) }) | from_entries) as $alloc |
+
+          # Build rows
+          ($nodes.items | map(
+            (.metadata.name) as $name |
+            ((.status.capacity["nvidia.com/gpu"] // "0") | tonumber) as $cap |
+            ($alloc[$name] // 0) as $used |
+            ($cap - $used) as $free |
+            { name: $name, cap: $cap, used: $used, free: $free }
+          ) | sort_by(.name)) as $rows |
+
+          ($rows | map(.cap) | add // 0) as $tc |
+          ($rows | map(.used) | add // 0) as $tu |
+          ($rows | map(.free) | add // 0) as $tf |
+
+          ["NODE\tCAPACITY\tALLOCATED\tAVAILABLE"] +
+          ($rows | map(select(.cap > 0)) | map("\(.name)\t\(.cap)\t\(.used)\t\(.free)")) +
+          ["─\t─\t─\t─"] +
+          ["TOTAL\t\($tc)\t\($tu)\t\($tf)"]
+          | .[]
+        ' | column -t -s$'\t'
+
+        echo ""
+        read -p "Press Enter to close..."

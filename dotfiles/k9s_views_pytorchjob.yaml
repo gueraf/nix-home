@@ -9,3 +9,12 @@ views:
       - "GPU/WORKER:.spec.pytorchReplicaSpecs.Worker.template.spec.containers[0].resources.limits.nvidia\\.com/gpu|NR"
       - STATUS
       - AGE
+  v1/nodes:
+    columns:
+      - NAME
+      - STATUS
+      - ROLES
+      - "GPU-CAP:.status.capacity.nvidia\\.com/gpu|NR"
+      - "GPU-ALLOC:.status.allocatable.nvidia\\.com/gpu|NR"
+      - VERSION
+      - AGE

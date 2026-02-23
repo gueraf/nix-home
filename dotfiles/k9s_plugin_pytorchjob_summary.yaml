@@ -1,0 +1,46 @@
+plugins:
+  pytorchjob-summary:
+    shortCut: t
+    description: "Running jobs: replicas & GPUs"
+    scopes:
+      - pytorchjobs
+    command: bash
+    background: false
+    confirm: false
+    args:
+      - -c
+      - |
+        JSON=$(kubectl get pytorchjob --all-namespaces --context "$CONTEXT" -o json 2>&1)
+        if [ $? -ne 0 ]; then
+          echo "Error: $JSON"
+          read -p "Press Enter to close..."
+          exit 1
+        fi
+
+        echo "$JSON" | jq -r '
+          .items
+          | map(select(
+              .status.conditions // [] | map(select(.type == "Running" and .status == "True")) | length > 0
+            ))
+          | if length == 0 then
+              "No running PyTorchJobs found.\n"
+            else
+              map(
+                (.spec.pytorchReplicaSpecs.Master.replicas // 0) as $mr |
+                (.spec.pytorchReplicaSpecs.Worker.replicas // 0) as $wr |
+                ((.spec.pytorchReplicaSpecs.Master.template.spec.containers[0].resources.limits["nvidia.com/gpu"] // "0") | tonumber) as $mg |
+                ((.spec.pytorchReplicaSpecs.Worker.template.spec.containers[0].resources.limits["nvidia.com/gpu"] // "0") | tonumber) as $wg |
+                { ns: .metadata.namespace, name: .metadata.name, nodes: ($mr + $wr), gpus: ($mr * $mg + $wr * $wg) }
+              ) as $rows |
+              ($rows | map(.nodes) | add) as $tn |
+              ($rows | map(.gpus) | add) as $tg |
+              ["NAMESPACE\tNAME\tNODES\tGPUs"] +
+              ($rows | map("\(.ns)\t\(.name)\t\(.nodes)\t\(.gpus)")) +
+              ["─\t─\t─\t─"] +
+              ["TOTAL\t\($rows | length) jobs\t\($tn)\t\($tg)"]
+              | .[]
+            end
+        ' | column -t -s$'\t'
+
+        echo ""
+        read -p "Press Enter to close..."

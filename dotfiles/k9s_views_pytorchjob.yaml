@@ -1,0 +1,11 @@
+views:
+  kubeflow.org/v1/pytorchjobs:
+    columns:
+      - NAME
+      - NAMESPACE
+      - "M-REPLICAS:.spec.pytorchReplicaSpecs.Master.replicas|NR"
+      - "W-REPLICAS:.spec.pytorchReplicaSpecs.Worker.replicas|NR"
+      - "GPU/MASTER:.spec.pytorchReplicaSpecs.Master.template.spec.containers[0].resources.limits.nvidia\\.com/gpu|NR"
+      - "GPU/WORKER:.spec.pytorchReplicaSpecs.Worker.template.spec.containers[0].resources.limits.nvidia\\.com/gpu|NR"
+      - STATUS
+      - AGE

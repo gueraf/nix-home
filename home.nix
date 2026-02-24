@@ -3,7 +3,7 @@
 {
   nixpkgs.config.allowUnfree = true;
   targets.genericLinux.enable = true;
-  # targets.genericLinux.gpu.enable = false;
+  targets.genericLinux.gpu.enable = !pkgs.stdenv.hostPlatform.isAarch64;
   home.username = "fabian";
   home.homeDirectory = "/home/fabian";
 
@@ -54,7 +54,6 @@
 
     # pkgs.go
     pkgs.bmon
-    pkgs.bazel-buildtools
     pkgs.bazelisk
 
     # pkgs.uv

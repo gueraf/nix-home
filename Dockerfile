@@ -47,10 +47,7 @@ RUN apt-get update && \
 
 # Configure SSH
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-    mkdir -p /home/fabian/.ssh && \
-    chown fabian:fabian /home/fabian/.ssh && \
-    chmod 700 /home/fabian/.ssh
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
 # Install docker (https://docs.docker.com/engine/install/ubuntu/)
 RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
@@ -109,7 +106,10 @@ RUN chmod +x /tini
 #     fi
 RUN useradd --uid 1010 --shell /bin/bash --password "" --home /home/fabian fabian && \
     echo "fabian ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-RUN mkdir -p /home/fabian/ && chown fabian /home/fabian/
+RUN mkdir -p /home/fabian/ && chown fabian /home/fabian/ && \
+    mkdir -p /home/fabian/.ssh && \
+    chown fabian:fabian /home/fabian/.ssh && \
+    chmod 700 /home/fabian/.ssh
 
 COPY . /home/fabian/nix_home
 RUN chown -R fabian /home/fabian/nix_home

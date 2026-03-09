@@ -1,5 +1,6 @@
 ARG TARGETARCH=amd64
 FROM --platform=linux/${TARGETARCH} nvidia/cuda:12.9.1-devel-ubuntu24.04
+EXPOSE 22
 ENV CUDA_HOME=/usr/local/cuda-12.9/
 ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
 
@@ -36,12 +37,20 @@ RUN apt-get update && \
     tmux \
     traceroute \
     vim \
+    openssh-server \
     unzip \
     wget \
     zip \
     zstd \
     zlib1g-dev && \
     apt clean
+
+# Configure SSH
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    mkdir -p /home/fabian/.ssh && \
+    chown fabian:fabian /home/fabian/.ssh && \
+    chmod 700 /home/fabian/.ssh
 
 # Install docker (https://docs.docker.com/engine/install/ubuntu/)
 RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
@@ -157,4 +166,4 @@ RUN cd /tmp/ && \
     fi
 
 ENTRYPOINT ["/tini", "--"]
-CMD ["/bin/bash", "-c", "tmux new -s main -d; sleep infinity"]
+CMD ["/bin/bash", "-c", "service ssh start && tmux new -s main -d; sleep infinity"]

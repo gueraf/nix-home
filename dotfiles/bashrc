@@ -1,3 +1,19 @@
+if [[ -n "$DEBUG" ]]; then
+    set -x
+    echo "Starting bashrc evaluation..."
+fi
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# Don't run anything else if TERM is dumb (e.g., tramp, scp)
+if [[ "$TERM" == "dumb" ]]; then
+    return
+fi
+
 export PATH=/home/fabian/.local/bin:/home/fabian/bin:/home/fabian/.atuin/bin:$PATH
 export ANDROID_SDK_ROOT=~/Android/Sdk
 export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin

@@ -10,13 +10,7 @@
   # Do not change!
   home.stateVersion = "23.11";
 
-  home.activation = {
-    linkDesktopApplications = {
-      after = [ "writeBoundary" "createXdgUserDirectories" ];
-      before = [ ];
-      data = "/usr/bin/sudo /usr/bin/chmod -R 777 $HOME/.nix-profile/share/applications && if [ -x /usr/bin/update-desktop-database ]; then /usr/bin/update-desktop-database $HOME/.nix-profile/share/applications; fi";
-    };
-  };
+
 
   home.packages = [
     pkgs.tmux

@@ -1,3 +1,19 @@
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]]; then
-  tmux a -t main || exec tmux new -s main && exit;
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [ -t 0 ] && [ -t 1 ] && [ -t 2 ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  if [[ -n "$DEBUG" ]]; then
+    echo "Attempting to start tmux. TERM=$TERM, TMUX=$TMUX"
+  fi
+  # Do not use exec immediately, so we don't close the shell if tmux fails to start
+  tmux new-session -A -s main
+  TMUX_EXIT_CODE=$?
+  if [[ -n "$DEBUG" ]]; then
+    echo "tmux exited with code: $TMUX_EXIT_CODE"
+  fi
+  if [ $TMUX_EXIT_CODE -eq 0 ]; then
+    # Tmux ran successfully and we detached/exited from it. Exit this parent shell.
+    exit 0
+  else
+    if [[ -n "$DEBUG" ]]; then
+      echo "tmux failed to start. Falling back to normal bash prompt."
+    fi
+  fi
 fi

@@ -56,7 +56,7 @@
     pkgs.bazel-buildtools
     pkgs.bazelisk
 
-    pkgs.uv
+    # pkgs.uv
     pkgs.azure-cli
     pkgs.kubelogin
     pkgs.terraform

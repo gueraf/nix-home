@@ -30,7 +30,7 @@ if [ -f /home/fabian/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . /ho
 [[ -f /mnt/data/local/fabian/env/export_env.sh ]] && source /mnt/data/local/fabian/env/export_env.sh
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 
-alias claude="--dangerously-skip-permissions"
+alias claude="claude --dangerously-skip-permissions"
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"
 alias raydash="kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers | xargs -I {} kubectl port-forward {} 8265:8265"

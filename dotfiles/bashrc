@@ -14,12 +14,12 @@ if [[ "$TERM" == "dumb" ]]; then
     return
 fi
 
-export PATH=/home/fabian/.local/bin:/home/fabian/bin:/home/fabian/.atuin/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/bin:$HOME/.atuin/bin:$PATH
 export ANDROID_SDK_ROOT=~/Android/Sdk
 export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 
-if [ -f /home/fabian/.nix-profile/etc/profile.d/nix.sh ]; then . /home/fabian/.nix-profile/etc/profile.d/nix.sh; fi
-if [ -f /home/fabian/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . /home/fabian/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
+if [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
+if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
 
 . ~/.bash_tmux
 

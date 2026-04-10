@@ -56,7 +56,7 @@ in
     # pkgs.uv
     # pkgs.azure-cli
     pkgs.kubelogin
-    pkgs.terraform
+    # pkgs.terraform
     pkgs.rclone
   ];
 

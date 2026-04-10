@@ -16,6 +16,7 @@ ln -s ~/nix-home ~/.config/nixpkgs
 ```
 
 ```sh
+export PATH="$HOME/.nix-profile/bin:$PATH"
 $HOME/.nix-profile/bin/home-manager switch -f ~/nix-home/home.nix
 ```
 

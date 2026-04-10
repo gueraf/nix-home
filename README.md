@@ -16,8 +16,7 @@ ln -s ~/nix-home ~/.config/nixpkgs
 ```
 
 ```sh
-home-manager switch -f ~/nix-home/home.nix
-# home-manager switch -f /nfs/home/gmi/fabian/nix-home/home.nix
+$HOME/.nix-profile/bin/home-manager switch -f ~/nix-home/home.nix
 ```
 
 ```sh

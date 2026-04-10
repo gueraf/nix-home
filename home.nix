@@ -1,11 +1,14 @@
 { config, pkgs, ... }:
 
+let
+  username = builtins.getEnv "USER";
+in
 {
   nixpkgs.config.allowUnfree = true;
   targets.genericLinux.enable = true;
   targets.genericLinux.gpu.enable = !pkgs.stdenv.hostPlatform.isAarch64;
-  home.username = "fabian";
-  home.homeDirectory = "/home/fabian";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
 
   # Do not change!
   home.stateVersion = "23.11";
@@ -13,7 +16,7 @@
 
 
   home.packages = [
-    pkgs.tmux
+    # pkgs.tmux  # Installed via APT in once.sh instead
     # pkgs.vim
     # pkgs.git
     # pkgs.git-crecord

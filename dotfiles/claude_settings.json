@@ -2,5 +2,7 @@
   "attribution": {
     "commits": false,
     "pullRequests": false
-  }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "agentPushNotifEnabled": true
 }

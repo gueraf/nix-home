@@ -18,6 +18,10 @@ export PATH=$HOME/.local/bin:$HOME/bin:$HOME/.atuin/bin:$PATH
 export ANDROID_SDK_ROOT=~/Android/Sdk
 export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 
+if mountpoint -q /mnt/iliad 2>/dev/null; then
+    export HF_HOME=/mnt/iliad/huggingface
+fi
+
 if [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
 if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
 

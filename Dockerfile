@@ -146,8 +146,12 @@ RUN $HOME/.nix-profile/bin/jj config set --user user.name "Fabian Guera" && \
 
 RUN pipx install huggingface_hub[cli] ninja
 RUN sudo npm install -g @github/copilot
-RUN curl -fsSL https://antigravity.google/cli/install.sh | bash && \
-    curl -fsSL https://claude.ai/install.sh | bash
+RUN curl -fsSL https://antigravity.google/cli/install.sh -o /tmp/antigravity-install.sh && \
+    bash /tmp/antigravity-install.sh && \
+    rm /tmp/antigravity-install.sh && \
+    curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh && \
+    bash /tmp/claude-install.sh && \
+    rm /tmp/claude-install.sh
 
 RUN sudo usermod -aG docker $USER || true && \
     sudo newgrp docker || true

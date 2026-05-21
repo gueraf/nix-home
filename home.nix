@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   username = builtins.getEnv "USER";
@@ -73,6 +73,32 @@ in
     ".config/k9s/plugins/pytorchjob_summary.yaml".source = ./dotfiles/k9s_plugin_pytorchjob_summary.yaml;
     ".claude/settings.json".source = ./dotfiles/claude_settings.json;
   };
+
+  home.activation.installExternalCliTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    set -e
+    state_dir="$HOME/.local/state/nix-home"
+    ${pkgs.coreutils}/bin/mkdir -p "$state_dir"
+
+    if [ ! -f "$state_dir/antigravity-cli-installed" ]; then
+      tmp_script="$(${pkgs.coreutils}/bin/mktemp)"
+      trap '${pkgs.coreutils}/bin/rm -f "$tmp_script"' EXIT
+      ${pkgs.curl}/bin/curl -fsSL https://antigravity.google/cli/install.sh -o "$tmp_script"
+      ${pkgs.bash}/bin/bash "$tmp_script"
+      ${pkgs.coreutils}/bin/touch "$state_dir/antigravity-cli-installed"
+      trap - EXIT
+      ${pkgs.coreutils}/bin/rm -f "$tmp_script"
+    fi
+
+    if [ ! -f "$state_dir/claude-cli-installed" ]; then
+      tmp_script="$(${pkgs.coreutils}/bin/mktemp)"
+      trap '${pkgs.coreutils}/bin/rm -f "$tmp_script"' EXIT
+      ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh -o "$tmp_script"
+      ${pkgs.bash}/bin/bash "$tmp_script"
+      ${pkgs.coreutils}/bin/touch "$state_dir/claude-cli-installed"
+      trap - EXIT
+      ${pkgs.coreutils}/bin/rm -f "$tmp_script"
+    fi
+  '';
 
   programs.home-manager.enable = true;
 }

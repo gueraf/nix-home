@@ -87,6 +87,7 @@ in
         return
       fi
 
+      echo "Installing CLI from $url"
       (
         set -e
         tmp_dir="$(${pkgs.coreutils}/bin/mktemp -d)"
@@ -94,8 +95,9 @@ in
         tmp_script="$tmp_dir/install.sh"
         ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp_script"
         ${pkgs.bash}/bin/bash "$tmp_script"
-      )
+      ) || return 1
       ${pkgs.coreutils}/bin/touch "$state_dir/$marker"
+      echo "Installed CLI from $url"
     }
 
     install_cli "antigravity-cli-installed" "https://antigravity.google/cli/install.sh"

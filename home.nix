@@ -87,12 +87,15 @@ in
         return
       fi
 
-      tmp_dir="$(${pkgs.coreutils}/bin/mktemp -d)"
-      tmp_script="$tmp_dir/install.sh"
-      ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp_script"
-      ${pkgs.bash}/bin/bash "$tmp_script"
+      (
+        set -e
+        tmp_dir="$(${pkgs.coreutils}/bin/mktemp -d)"
+        trap '${pkgs.coreutils}/bin/rm -rf "$tmp_dir"' EXIT
+        tmp_script="$tmp_dir/install.sh"
+        ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp_script"
+        ${pkgs.bash}/bin/bash "$tmp_script"
+      )
       ${pkgs.coreutils}/bin/touch "$state_dir/$marker"
-      ${pkgs.coreutils}/bin/rm -rf "$tmp_dir"
     }
 
     install_cli "antigravity-cli-installed" "https://antigravity.google/cli/install.sh"

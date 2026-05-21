@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   username = builtins.getEnv "USER";
@@ -73,6 +73,36 @@ in
     ".config/k9s/plugins/pytorchjob_summary.yaml".source = ./dotfiles/k9s_plugin_pytorchjob_summary.yaml;
     ".claude/settings.json".source = ./dotfiles/claude_settings.json;
   };
+
+  home.activation.installExternalCliTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    set -e
+    state_dir="$HOME/.local/state/nix-home"
+    ${pkgs.coreutils}/bin/mkdir -p "$state_dir"
+
+    install_cli() {
+      marker="$1"
+      url="$2"
+
+      if [ -f "$state_dir/$marker" ]; then
+        return
+      fi
+
+      echo "Installing CLI from $url"
+      (
+        set -e
+        tmp_dir="$(${pkgs.coreutils}/bin/mktemp -d)"
+        trap '${pkgs.coreutils}/bin/rm -rf "$tmp_dir"' EXIT
+        tmp_script="$tmp_dir/install.sh"
+        ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp_script"
+        ${pkgs.bash}/bin/bash "$tmp_script"
+      ) || return 1
+      ${pkgs.coreutils}/bin/touch "$state_dir/$marker"
+      echo "Installed CLI from $url"
+    }
+
+    install_cli "antigravity-cli-installed" "https://antigravity.google/cli/install.sh"
+    install_cli "claude-cli-installed" "https://claude.ai/install.sh"
+  '';
 
   programs.home-manager.enable = true;
 }

@@ -79,25 +79,24 @@ in
     state_dir="$HOME/.local/state/nix-home"
     ${pkgs.coreutils}/bin/mkdir -p "$state_dir"
 
-    if [ ! -f "$state_dir/antigravity-cli-installed" ]; then
-      tmp_script="$(${pkgs.coreutils}/bin/mktemp)"
-      trap '${pkgs.coreutils}/bin/rm -f "$tmp_script"' EXIT
-      ${pkgs.curl}/bin/curl -fsSL https://antigravity.google/cli/install.sh -o "$tmp_script"
-      ${pkgs.bash}/bin/bash "$tmp_script"
-      ${pkgs.coreutils}/bin/touch "$state_dir/antigravity-cli-installed"
-      trap - EXIT
-      ${pkgs.coreutils}/bin/rm -f "$tmp_script"
-    fi
+    install_cli() {
+      marker="$1"
+      url="$2"
 
-    if [ ! -f "$state_dir/claude-cli-installed" ]; then
-      tmp_script="$(${pkgs.coreutils}/bin/mktemp)"
-      trap '${pkgs.coreutils}/bin/rm -f "$tmp_script"' EXIT
-      ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh -o "$tmp_script"
+      if [ -f "$state_dir/$marker" ]; then
+        return
+      fi
+
+      tmp_dir="$(${pkgs.coreutils}/bin/mktemp -d)"
+      tmp_script="$tmp_dir/install.sh"
+      ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp_script"
       ${pkgs.bash}/bin/bash "$tmp_script"
-      ${pkgs.coreutils}/bin/touch "$state_dir/claude-cli-installed"
-      trap - EXIT
-      ${pkgs.coreutils}/bin/rm -f "$tmp_script"
-    fi
+      ${pkgs.coreutils}/bin/touch "$state_dir/$marker"
+      ${pkgs.coreutils}/bin/rm -rf "$tmp_dir"
+    }
+
+    install_cli "antigravity-cli-installed" "https://antigravity.google/cli/install.sh"
+    install_cli "claude-cli-installed" "https://claude.ai/install.sh"
   '';
 
   programs.home-manager.enable = true;

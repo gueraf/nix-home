@@ -90,6 +90,7 @@ in
       echo "Installing CLI from $url"
       (
         set -e
+        export PATH="${pkgs.curl}/bin:$PATH"
         tmp_dir="$(${pkgs.coreutils}/bin/mktemp -d)"
         trap '${pkgs.coreutils}/bin/rm -rf "$tmp_dir"' EXIT
         tmp_script="$tmp_dir/install.sh"

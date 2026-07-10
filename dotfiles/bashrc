@@ -36,6 +36,7 @@ if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix
 
 alias claude="claude --dangerously-skip-permissions"
 alias codex="codex --yolo"
+alias agy="agy --dangerously-skip-permissions"
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"
 alias raydash="kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers | xargs -I {} kubectl port-forward {} 8265:8265"

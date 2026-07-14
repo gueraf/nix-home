@@ -6,6 +6,10 @@
 #   2. split HEAD files into N groups; N sparse-checkout worktrees each do ONE
 #      batched promisor fetch           -> N parallel bulk streams (~N x faster)
 #   3. final checkout                   -> blobs already local, instant
+#   4. backfill                          -> bulk-fetch any HEAD blobs the parallel
+#                                           streams missed, so HEAD is guaranteed
+#                                           complete (safe for tools like jj that
+#                                           don't do promisor lazy-fetch)
 #
 # Usage: git pclone <repo> [dest] [-n N]
 #   git pclone odysseyml/odyssey                 # github owner/repo shorthand
@@ -18,8 +22,13 @@
 #     Cloud do; some old self-hosted servers don't.
 #   * Only helps when the cap is PER-CONNECTION (concurrent streams stack). If
 #     your total bandwidth is the cap, this just shares it - no speedup.
-#   * Result is a partial (blobless) clone: HEAD is fully local; historical
-#     file versions are fetched on demand.
+#   * Result is a partial (blobless) clone: HEAD is fully local (guaranteed by
+#     the backfill step); historical file versions are fetched on demand.
+#   * jj note: jj's git backend does NOT trigger git's promisor lazy-fetch, so a
+#     partial clone with deferred blobs breaks `jj st`/checkout ("Object ... of
+#     type file not found"). The backfill keeps HEAD complete; but a later plain
+#     `git fetch` that advances a branch can re-introduce missing blobs for that
+#     new tip -- rerun the backfill (or `git checkout -f`) before using jj on it.
 #   * Git LFS objects and submodules are NOT parallelized here.
 set -euo pipefail
 
@@ -79,6 +88,17 @@ git checkout -f HEAD
 for j in $(seq 0 $((N-1))); do git worktree remove -f "$WTBASE.$j" 2>/dev/null || true; done
 git worktree prune 2>/dev/null || true
 
+# Backfill: the parallel fetches above are best-effort (errors suppressed), so a
+# racing/failed stream can leave HEAD blobs missing. Bulk-fetch whatever remains
+# in batches -- with blob:none only blobs are ever missing (trees+commits are
+# already local), so this fully materializes HEAD and makes the clone jj-safe.
+mapfile -t missing < <(git rev-list --objects --no-walk --missing=print HEAD 2>/dev/null | sed -n 's/^?//p')
+if [ "${#missing[@]}" -gt 0 ]; then
+  echo ">> [4/4] backfilling ${#missing[@]} deferred HEAD blobs"
+  printf '%s\n' "${missing[@]}" | xargs -n 2000 \
+    git -c fetch.negotiationAlgorithm=noop fetch --no-tags --no-write-fetch-head --quiet origin
+fi
+
 miss=$(git rev-list --objects --no-walk --missing=print HEAD 2>/dev/null | grep -c '^?' || true)
 echo ">> done: $(git rev-parse --short HEAD) on $(git rev-parse --abbrev-ref HEAD) (missing HEAD blobs=$miss)"
-[ "$miss" = 0 ] || echo ">> note: $miss blobs still deferred (partial clone); fetched on demand"
+[ "$miss" = 0 ] || echo ">> WARNING: $miss HEAD blobs still missing after backfill (did the server refuse blob wants?)"

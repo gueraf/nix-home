@@ -72,6 +72,7 @@ in
     ".config/k9s/views.yaml".source = ./dotfiles/k9s_views_pytorchjob.yaml;
     ".config/k9s/plugins/pytorchjob_summary.yaml".source = ./dotfiles/k9s_plugin_pytorchjob_summary.yaml;
     ".claude/settings.json".source = ./dotfiles/claude_settings.json;
+    ".local/bin/git-pclone" = { source = ./dotfiles/git-pclone; executable = true; };
   };
 
   home.activation.installExternalCliTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

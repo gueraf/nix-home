@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# git-pclone: parallel clone that beats single-connection throughput caps
+# (e.g. per-connection peering/QoS throttling). Concurrent git-uploadpack
+# streams stack, so we:
+#   1. blobless partial clone           -> full history graph, no blobs (1 stream)
+#   2. split HEAD files into N groups; N sparse-checkout worktrees each do ONE
+#      batched promisor fetch           -> N parallel bulk streams (~N x faster)
+#   3. final checkout                   -> blobs already local, instant
+#
+# Usage: git pclone <repo> [dest] [-n N]
+#   git pclone odysseyml/odyssey                 # github owner/repo shorthand
+#   git pclone https://github.com/foo/bar.git    # any full clone URL / host
+#   git pclone git@github.com:foo/bar.git ~/bar  # ssh URL + explicit dest
+#   git pclone odysseyml/odyssey -n 12           # 12 parallel streams
+#
+# Notes / limits:
+#   * Server must support partial clone (--filter). GitHub/GitLab/Bitbucket
+#     Cloud do; some old self-hosted servers don't.
+#   * Only helps when the cap is PER-CONNECTION (concurrent streams stack). If
+#     your total bandwidth is the cap, this just shares it - no speedup.
+#   * Result is a partial (blobless) clone: HEAD is fully local; historical
+#     file versions are fetched on demand.
+#   * Git LFS objects and submodules are NOT parallelized here.
+set -euo pipefail
+
+usage() { grep '^# ' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+[ $# -ge 1 ] || usage 1
+case "$1" in -h|--help) usage 0;; esac
+
+REPOARG=$1; shift
+DEST=""
+N=8
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -n) N=${2:?-n needs a value}; shift 2;;
+    -n*) N=${1#-n}; shift;;
+    -h|--help) usage 0;;
+    *) [ -z "$DEST" ] && { DEST=$1; shift; } || usage 1;;
+  esac
+done
+
+# Resolve URL: accept full URL (has :// or git@host:) or github owner/repo.
+if printf '%s' "$REPOARG" | grep -qE '://|@[^/]+:'; then
+  URL=$REPOARG
+else
+  URL="https://github.com/${REPOARG%.git}.git"
+fi
+[ -n "$DEST" ] || DEST=$(basename "${URL%.git}")
+[ ! -e "$DEST" ] || { echo "git-pclone: destination '$DEST' already exists" >&2; exit 1; }
+
+TMP=$(mktemp -d)
+trap 'rm -rf "$TMP"' EXIT
+WTBASE="$TMP/wt"
+
+echo ">> [1/3] blobless clone: $URL -> $DEST"
+git clone --filter=blob:none --no-checkout --no-tags "$URL" "$DEST"
+cd "$DEST"
+
+echo ">> [2/3] parallel bulk fetch of HEAD blobs (N=$N)"
+git -c core.quotepath=false ls-tree -r --name-only HEAD > "$TMP/head_paths"
+split -n r/$N -d "$TMP/head_paths" "$TMP/g"
+i=0
+for f in "$TMP"/g*; do
+  wt="$WTBASE.$i"
+  git worktree add -f --no-checkout "$wt" HEAD >/dev/null 2>&1
+  git -C "$wt" sparse-checkout init --no-cone >/dev/null 2>&1
+  git -C "$wt" sparse-checkout set --no-cone --stdin < <(sed 's#^#/#' "$f") >/dev/null 2>&1
+  i=$((i+1))
+done
+pids=(); i=0
+for f in "$TMP"/g*; do
+  ( git -C "$WTBASE.$i" checkout -f HEAD >/dev/null 2>&1 ) & pids+=($!); i=$((i+1))
+done
+for p in "${pids[@]}"; do wait "$p" || true; done
+
+echo ">> [3/3] final checkout + cleanup"
+rm -f .git/index.lock
+git checkout -f HEAD
+for j in $(seq 0 $((N-1))); do git worktree remove -f "$WTBASE.$j" 2>/dev/null || true; done
+git worktree prune 2>/dev/null || true
+
+miss=$(git rev-list --objects --no-walk --missing=print HEAD 2>/dev/null | grep -c '^?' || true)
+echo ">> done: $(git rev-parse --short HEAD) on $(git rev-parse --abbrev-ref HEAD) (missing HEAD blobs=$miss)"
+[ "$miss" = 0 ] || echo ">> note: $miss blobs still deferred (partial clone); fetched on demand"

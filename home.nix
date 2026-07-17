@@ -18,7 +18,7 @@ in
   home.packages = [
     # pkgs.tmux  # Installed via APT in once.sh instead
     # pkgs.vim
-    # pkgs.git
+    pkgs.git
     # pkgs.git-crecord
     pkgs.jujutsu
     pkgs.htop

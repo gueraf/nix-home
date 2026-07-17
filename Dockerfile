@@ -8,6 +8,12 @@ ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
 RUN echo "* soft memlock unlimited" | tee /etc/security/limits.conf
 RUN echo "* hard memlock unlimited" | tee /etc/security/limits.conf
 
+# Install software-properties-common first, then add git-core PPA for latest stable git
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
+    add-apt-repository ppa:git-core/ppa && \
+    apt clean
+
 # Install app dependencies
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -29,7 +35,6 @@ RUN apt-get update && \
     python-is-python3 \
     python3-nbformat \
     python3-pip \
-    software-properties-common \
     sudo \
     telnet \
     time \

@@ -15,7 +15,6 @@ RUN apt-get update && \
     cmake \
     curl \
     dnsutils \
-    git \
     iproute2 \
     iputils-ping \
     ipython3 \
@@ -134,6 +133,9 @@ RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     atuin init bash >> /home/fabian/nix_home/dotfiles/bashrc && \
     $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
     $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
+
+# Install git from ppa:git-core/ppa (PPA was set up by home-manager activation above)
+RUN sudo apt-get install -y git && apt clean
 
 RUN git config --global pull.rebase true
 RUN git config --global core.editor "vim"

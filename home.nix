@@ -75,6 +75,14 @@ in
     ".local/bin/git-pclone" = { source = ./dotfiles/git-pclone; executable = true; };
   };
 
+  home.activation.addGitCorePpa = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if ! grep -r "git-core" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | grep -q "git-core"; then
+      echo "Adding git-core PPA for latest stable git..."
+      sudo add-apt-repository -y ppa:git-core/ppa
+      sudo apt-get update -qq
+    fi
+  '';
+
   home.activation.installExternalCliTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     set -e
     state_dir="$HOME/.local/state/nix-home"

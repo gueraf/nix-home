@@ -8,12 +8,6 @@ ENV CUDA_LIB_PATH=/usr/local/cuda-12.9/lib64
 RUN echo "* soft memlock unlimited" | tee /etc/security/limits.conf
 RUN echo "* hard memlock unlimited" | tee /etc/security/limits.conf
 
-# Install software-properties-common first, then add git-core PPA for latest stable git
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
-    add-apt-repository ppa:git-core/ppa && \
-    apt clean
-
 # Install app dependencies
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -21,7 +15,6 @@ RUN apt-get update && \
     cmake \
     curl \
     dnsutils \
-    git \
     iproute2 \
     iputils-ping \
     ipython3 \
@@ -35,6 +28,7 @@ RUN apt-get update && \
     python-is-python3 \
     python3-nbformat \
     python3-pip \
+    software-properties-common \
     sudo \
     telnet \
     time \
@@ -139,6 +133,9 @@ RUN . $HOME/.nix-profile/etc/profile.d/nix.sh && \
     atuin init bash >> /home/fabian/nix_home/dotfiles/bashrc && \
     $HOME/.nix-profile/bin/home-manager switch -f /home/fabian/nix_home/home.nix && \
     $HOME/.nix-profile/bin/nix-collect-garbage --delete-old
+
+# Install git from ppa:git-core/ppa (PPA was set up by home-manager activation above)
+RUN sudo apt-get install -y git && apt clean
 
 RUN git config --global pull.rebase true
 RUN git config --global core.editor "vim"

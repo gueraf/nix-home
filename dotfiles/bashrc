@@ -36,6 +36,7 @@ if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix
 
 alias claude="claude --dangerously-skip-permissions"
 alias codex="codex --yolo"
+alias agent="agent --yolo"
 alias agy="agy --dangerously-skip-permissions"
 alias sudop="sudo --preserve-env=PATH"
 alias k="kubectl"

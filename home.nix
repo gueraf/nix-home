@@ -76,10 +76,13 @@ in
   };
 
   home.activation.addGitCorePpa = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if ! grep -r "git-core" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | grep -q "git-core"; then
-      echo "Adding git-core PPA for latest stable git..."
-      sudo add-apt-repository -y ppa:git-core/ppa
-      sudo apt-get update -qq
+    export PATH="/usr/bin:/usr/sbin:/bin:/sbin:$PATH"
+    if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null && command -v add-apt-repository >/dev/null 2>&1; then
+      if ! grep -r "git-core" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | grep -q "git-core"; then
+        echo "Adding git-core PPA for latest stable git..."
+        sudo add-apt-repository -y ppa:git-core/ppa
+        sudo apt-get update -qq
+      fi
     fi
   '';
 

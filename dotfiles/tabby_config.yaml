@@ -5,17 +5,21 @@ enableAnalytics: false
 terminal:
   autoOpen: false
 startupProfiles:
+  - local:localhost
   - local:ssh-yin-zrh
+  - local:ssh-yang-zrh
   - local:ssh-limmat-zrh
   - local:ssh-sihl-zrh
-  - local:ssh-isambard-zrh
-  - local:ssh-beast
-  - local:ssh-trn3-dev1-gueraf-b
-  - local:ssh-trn3-dev1-gueraf-1
-  - local:ssh-tsnet-train-aps3-2
-  - local:ssh-odysseus
-  - local:ssh-zygmunt
 profiles:
+  - id: local:localhost
+    type: local
+    name: localhost
+    icon: fas fa-laptop
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -l
   - id: local:ssh-yin-zrh
     type: local
     name: yin-zrh
@@ -26,6 +30,16 @@ profiles:
       args:
         - -c
         - while true; do ssh yin-zrh; read -r -p "[yin-zrh disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-yang-zrh
+    type: local
+    name: yang-zrh
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh yang-zrh; read -r -p "[yang-zrh disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
   - id: local:ssh-limmat-zrh
     type: local
     name: limmat-zrh
@@ -106,13 +120,3 @@ profiles:
       args:
         - -c
         - while true; do ssh odysseus; read -r -p "[odysseus disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
-  - id: local:ssh-zygmunt
-    type: local
-    name: zygmunt
-    icon: fas fa-terminal
-    disableDynamicTitle: true
-    options:
-      command: /bin/bash
-      args:
-        - -c
-        - while true; do ssh fabian@zygmunt; read -r -p "[zygmunt disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done

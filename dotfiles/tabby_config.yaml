@@ -1,0 +1,118 @@
+version: 1
+recoverTabs: false
+enableWelcomeTab: false
+enableAnalytics: false
+terminal:
+  autoOpen: false
+startupProfiles:
+  - local:ssh-yin-zrh
+  - local:ssh-limmat-zrh
+  - local:ssh-sihl-zrh
+  - local:ssh-isambard-zrh
+  - local:ssh-beast
+  - local:ssh-trn3-dev1-gueraf-b
+  - local:ssh-trn3-dev1-gueraf-1
+  - local:ssh-tsnet-train-aps3-2
+  - local:ssh-odysseus
+  - local:ssh-zygmunt
+profiles:
+  - id: local:ssh-yin-zrh
+    type: local
+    name: yin-zrh
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh yin-zrh; read -r -p "[yin-zrh disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-limmat-zrh
+    type: local
+    name: limmat-zrh
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh limmat-zrh; read -r -p "[limmat-zrh disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-sihl-zrh
+    type: local
+    name: sihl-zrh
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh sihl-zrh; read -r -p "[sihl-zrh disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-isambard-zrh
+    type: local
+    name: isambard-zrh
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh isambard-zrh; read -r -p "[isambard-zrh disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-beast
+    type: local
+    name: beast
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh beast; read -r -p "[beast disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-trn3-dev1-gueraf-b
+    type: local
+    name: trn3-dev1-gueraf-b
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh ubuntu@trn3-dev1-gueraf-b; read -r -p "[trn3-dev1-gueraf-b disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-trn3-dev1-gueraf-1
+    type: local
+    name: trn3-dev1-gueraf-1
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh ubuntu@trn3-dev1-gueraf-1; read -r -p "[trn3-dev1-gueraf-1 disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-tsnet-train-aps3-2
+    type: local
+    name: tsnet-train-aps3-2
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh ubuntu@tsnet-train-aps3-2; read -r -p "[tsnet-train-aps3-2 disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-odysseus
+    type: local
+    name: odysseus
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh odysseus; read -r -p "[odysseus disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done
+  - id: local:ssh-zygmunt
+    type: local
+    name: zygmunt
+    icon: fas fa-terminal
+    disableDynamicTitle: true
+    options:
+      command: /bin/bash
+      args:
+        - -c
+        - while true; do ssh fabian@zygmunt; read -r -p "[zygmunt disconnected — press Enter to reconnect, or type 'shell' for local bash] " ans || break; if [ "$ans" = "shell" ]; then TMUX=tabby exec /bin/bash -i; fi; done

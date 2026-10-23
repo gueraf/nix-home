@@ -1,0 +1,10 @@
+{
+  "name": "tabby-startup-tabs",
+  "version": "1.0.0",
+  "description": "Opens configured startupProfiles tabs when Tabby launches",
+  "author": "Fabian Guera",
+  "main": "index.js",
+  "keywords": [
+    "tabby-plugin"
+  ]
+}

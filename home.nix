@@ -2,6 +2,93 @@
 
 let
   username = builtins.getEnv "USER";
+  tabbyTerminal = let
+    version = "1.0.238";
+    src = if pkgs.stdenv.hostPlatform.isAarch64 then
+      pkgs.fetchurl {
+        url = "https://github.com/Eugeny/tabby/releases/download/v${version}/tabby-${version}-linux-arm64.deb";
+        sha256 = "1l1pl73rvk8xsp17wki0x8rlvsz24cik9ajkwbsdkqdqala3i7m7";
+      }
+    else
+      pkgs.fetchurl {
+        url = "https://github.com/Eugeny/tabby/releases/download/v${version}/tabby-${version}-linux-x64.deb";
+        sha256 = "070x5njk07rdpx98paalcb4liplj7nyr8znbk35wvdgjhjmbk8jy";
+      };
+  in pkgs.stdenv.mkDerivation {
+    pname = "tabby-terminal";
+    inherit version src;
+
+    nativeBuildInputs = [
+      pkgs.dpkg
+      pkgs.autoPatchelfHook
+      pkgs.makeWrapper
+    ];
+
+    buildInputs = [
+      pkgs.alsa-lib
+      pkgs.at-spi2-atk
+      pkgs.at-spi2-core
+      pkgs.brotli
+      pkgs.bzip2
+      pkgs.cairo
+      pkgs.cups
+      pkgs.dbus
+      pkgs.expat
+      pkgs.fontconfig
+      pkgs.freetype
+      pkgs.gdk-pixbuf
+      pkgs.glib
+      pkgs.gtk3
+      pkgs.libdrm
+      pkgs.libglvnd
+      pkgs.libnotify
+      pkgs.libpng
+      pkgs.libsecret
+      pkgs.libx11
+      pkgs.libxcb
+      pkgs.libxcomposite
+      pkgs.libxdamage
+      pkgs.libxext
+      pkgs.libxfixes
+      pkgs.libxkbcommon
+      pkgs.libxrandr
+      pkgs.libxtst
+      pkgs.mesa
+      pkgs.nspr
+      pkgs.nss
+      pkgs.pango
+      pkgs.stdenv.cc.cc.lib
+      pkgs.systemd
+      pkgs.vulkan-loader
+      pkgs.zlib
+    ];
+
+    unpackPhase = "dpkg-deb -x $src .";
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/opt $out/bin $out/share
+      cp -r opt/Tabby $out/opt/Tabby
+      cp -r usr/share/* $out/share/
+
+      find $out/opt/Tabby -path "*/prebuilds/*" -type f ! -path "*/prebuilds/${if pkgs.stdenv.hostPlatform.isAarch64 then "linux-arm64" else "linux-x64"}/*" -delete
+      find $out/opt/Tabby -name "*.musl.node" -delete
+      find $out/opt/Tabby -name "russh.*.node" ! -name "russh.${if pkgs.stdenv.hostPlatform.isAarch64 then "linux-arm64-gnu" else "linux-x64-gnu"}.node" -delete
+
+      makeWrapper $out/opt/Tabby/tabby $out/bin/tabby \
+        --add-flags "--no-sandbox --ozone-platform=x11" \
+        --set-default LIBGL_DRIVERS_PATH "${pkgs.mesa}/lib/dri" \
+        --set-default GBM_BACKENDS_PATH "${pkgs.mesa}/lib/gbm" \
+        --set-default __EGL_VENDOR_LIBRARY_DIRS "${pkgs.mesa}/share/glvnd/egl_vendor.d" \
+        --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ pkgs.libglvnd pkgs.vulkan-loader pkgs.mesa pkgs.systemd ]}"
+
+      substituteInPlace $out/share/applications/tabby.desktop \
+        --replace-fail "/opt/Tabby/tabby" "$out/bin/tabby"
+
+      runHook postInstall
+    '';
+  };
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -58,6 +145,7 @@ in
     pkgs.kubelogin
     # pkgs.terraform
     pkgs.rclone
+    tabbyTerminal
   ];
 
   home.file = {
@@ -71,9 +159,16 @@ in
     ".config/k9s/plugins/start_gpu_pod.yaml".source = ./dotfiles/k9s_plugin_start_gpu_pod.yaml;
     ".config/k9s/views.yaml".source = ./dotfiles/k9s_views_pytorchjob.yaml;
     ".config/k9s/plugins/pytorchjob_summary.yaml".source = ./dotfiles/k9s_plugin_pytorchjob_summary.yaml;
+    ".config/tabby/plugins/node_modules/tabby-startup-tabs/package.json".source = ./dotfiles/tabby_startup_tabs_package.json;
+    ".config/tabby/plugins/node_modules/tabby-startup-tabs/index.js".source = ./dotfiles/tabby_startup_tabs_index.js;
     ".claude/settings.json".source = ./dotfiles/claude_settings.json;
     ".local/bin/git-pclone" = { source = ./dotfiles/git-pclone; executable = true; };
   };
+
+  home.activation.installTabbyConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${pkgs.coreutils}/bin/mkdir -p "$HOME/.config/tabby"
+    ${pkgs.coreutils}/bin/install -m 644 ${./dotfiles/tabby_config.yaml} "$HOME/.config/tabby/config.yaml"
+  '';
 
   home.activation.addGitCorePpa = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     export PATH="/usr/bin:/usr/sbin:/bin:/sbin:$PATH"

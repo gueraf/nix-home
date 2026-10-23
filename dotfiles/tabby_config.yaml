@@ -2,6 +2,15 @@ version: 1
 recoverTabs: false
 enableWelcomeTab: false
 enableAnalytics: false
+hotkeys:
+  next-tab:
+    - Ctrl-PageDown
+    - Ctrl-Shift-Right
+    - Ctrl-Tab
+  previous-tab:
+    - Ctrl-PageUp
+    - Ctrl-Shift-Left
+    - Ctrl-Shift-Tab
 terminal:
   autoOpen: false
 startupProfiles:

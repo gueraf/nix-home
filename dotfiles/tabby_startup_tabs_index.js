@@ -59,7 +59,31 @@ StartupTabsCLIHandler.ctorParameters = () => [
 ];
 StartupTabsCLIHandler = core.Injectable()(StartupTabsCLIHandler);
 
-class StartupTabsModule {}
+class StartupTabsModule {
+  constructor(app, zone) {
+    window.addEventListener(
+      'keydown',
+      event => {
+        if (event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey) {
+          if (event.key === 'PageDown' || event.code === 'PageDown' || event.key === 'Next') {
+            event.preventDefault();
+            event.stopPropagation();
+            zone.run(() => app.nextTab());
+          } else if (event.key === 'PageUp' || event.code === 'PageUp' || event.key === 'Prior') {
+            event.preventDefault();
+            event.stopPropagation();
+            zone.run(() => app.previousTab());
+          }
+        }
+      },
+      true
+    );
+  }
+}
+StartupTabsModule.ctorParameters = () => [
+  { type: tabbyCore.AppService },
+  { type: core.NgZone },
+];
 StartupTabsModule = core.NgModule({
   providers: [
     { provide: tabbyCore.ConfigProvider, useClass: StartupTabsConfigProvider, multi: true },

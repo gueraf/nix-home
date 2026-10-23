@@ -11,6 +11,10 @@ hotkeys:
     - Ctrl-PageUp
     - Ctrl-Shift-Left
     - Ctrl-Shift-Tab
+  scroll-to-top:
+    - Shift-PageUp
+  scroll-to-bottom:
+    - Shift-PageDown
 terminal:
   autoOpen: false
 startupProfiles:

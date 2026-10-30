@@ -24,6 +24,7 @@ startupProfiles:
   - local:ssh-yang-zrh
   - local:ssh-limmat-zrh
   - local:ssh-sihl-zrh
+  - local:ssh-odysseus
 profiles:
   - id: local:localhost
     type: local

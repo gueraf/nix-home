@@ -12,5 +12,8 @@ unbind %
 # don't rename windows automatically
 set-option -g allow-rename off
 
+# enable OSC 8 hyperlinks
+set-option -sa terminal-features ",*:hyperlinks"
+
 # reload quickly
 bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"

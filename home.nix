@@ -146,6 +146,46 @@ in
     # pkgs.terraform
     pkgs.rclone
     tabbyTerminal
+    (pkgs.writeShellScriptBin "xdg-open" ''
+      if [ -n "''${WAYLAND_DISPLAY:-}" ] && [ -z "''${XDG_ACTIVATION_TOKEN:-}" ] && [ -x /usr/bin/python3 ]; then
+        token="$(env -u LD_LIBRARY_PATH GDK_BACKEND=wayland /usr/bin/python3 -c '
+import ctypes
+try:
+    gdk = ctypes.CDLL("libgdk-3.so.0")
+    gio = ctypes.CDLL("libgio-2.0.so.0")
+    wl = ctypes.CDLL("libwayland-client.so.0")
+    gdk.gdk_init(ctypes.byref(ctypes.c_int(0)), None)
+    gdk.gdk_display_get_default.restype = ctypes.c_void_p
+    d = gdk.gdk_display_get_default()
+    if d:
+        ctypes.c_void_p.from_address(d + 0x160).value = 0
+        gdk.gdk_display_get_app_launch_context.argtypes = [ctypes.c_void_p]
+        gdk.gdk_display_get_app_launch_context.restype = ctypes.c_void_p
+        ctx = gdk.gdk_display_get_app_launch_context(d)
+        gio.g_app_launch_context_get_startup_notify_id.argtypes = [
+            ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p
+        ]
+        gio.g_app_launch_context_get_startup_notify_id.restype = ctypes.c_char_p
+        token_bytes = gio.g_app_launch_context_get_startup_notify_id(ctx, None, None)
+        if token_bytes:
+            gdk.gdk_wayland_display_get_wl_display.argtypes = [ctypes.c_void_p]
+            gdk.gdk_wayland_display_get_wl_display.restype = ctypes.c_void_p
+            wl_d = gdk.gdk_wayland_display_get_wl_display(d)
+            if wl_d:
+                wl.wl_display_roundtrip.argtypes = [ctypes.c_void_p]
+                wl.wl_display_roundtrip(wl_d)
+            print(token_bytes.decode("utf-8", errors="ignore"))
+except Exception:
+    pass
+' 2>/dev/null)"
+        if [ -n "$token" ]; then
+          export XDG_ACTIVATION_TOKEN="$token"
+          export DESKTOP_STARTUP_ID="$token"
+        fi
+      fi
+      unset LD_LIBRARY_PATH
+      exec /usr/bin/xdg-open "$@"
+    '')
   ];
 
   home.file = {

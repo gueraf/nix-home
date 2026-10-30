@@ -17,6 +17,7 @@ hotkeys:
     - Shift-PageDown
 terminal:
   autoOpen: false
+  copyOnSelect: true
 startupProfiles:
   - local:localhost
   - local:ssh-yin-zrh

@@ -4,7 +4,7 @@ if command -v tmux &> /dev/null && [ -n "$PS1" ] && [ -t 0 ] && [ -t 1 ] && [ -t
   fi
   # Verify tmux server can start before exec-ing (no fallback after exec)
   if tmux start-server 2>/dev/null; then
-    exec tmux new-session -A -s main 2>/dev/null
+    exec tmux -T hyperlinks new-session -A -s main 2>/dev/null
   else
     echo "[TMUX] tmux start-server failed, falling back to plain shell"
   fi
